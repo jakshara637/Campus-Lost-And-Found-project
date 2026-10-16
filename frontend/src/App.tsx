@@ -4,11 +4,13 @@ import { apiUrl, clearAccessToken, fetchItems, fetchCurrentUser, getAccessToken,
 import PortalDialog, { type DialogMode } from "./components/PortalDialog";
 import ClaimsDialog, { type ClaimsDialogMode } from "./components/ClaimsDialog";
 import MyReportsDialog from "./components/MyReportsDialog";
+import AnalyticsDashboard from "./components/AnalyticsDashboard";
 import {
   ArrowDownRight,
   ArrowRight,
   ArrowUpRight,
   Bell,
+  BarChart3,
   BookOpen,
   Camera,
   CheckCircle2,
@@ -117,6 +119,7 @@ function App() {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [claimsDialogMode, setClaimsDialogMode] = useState<ClaimsDialogMode | null>(null);
   const [myReportsOpen, setMyReportsOpen] = useState(false);
+  const [analyticsOpen, setAnalyticsOpen] = useState(false);
   const [selectedClaimItem, setSelectedClaimItem] = useState<CampusItem | null>(null);
 
   useEffect(() => {
@@ -249,6 +252,9 @@ function App() {
           <button className="nav-link" type="button" onClick={scrollToReports}>
             Browse items
           </button>
+          <button className="nav-link" type="button" onClick={() => { setAnalyticsOpen(true); setMobileMenuOpen(false); }}>
+            <BarChart3 size={16} aria-hidden="true" /> Insights
+          </button>
           <a className="nav-link" href="#how-it-works" onClick={() => setMobileMenuOpen(false)}>
             How it works
           </a>
@@ -267,6 +273,9 @@ function App() {
                 </button>
                 <button className="button button-outline" type="button" onClick={() => { setMyReportsOpen(true); setMobileMenuOpen(false); }}>
                   <PackageSearch size={16} /> My reports
+                </button>
+                <button className="button button-outline" type="button" onClick={() => { setAnalyticsOpen(true); setMobileMenuOpen(false); }}>
+                  <BarChart3 size={16} /> Analytics dashboard
                 </button>
                 <button className="button button-primary" type="button" onClick={handleLogout}>
                   <LogOut size={16} /> Log out
@@ -705,6 +714,7 @@ function App() {
       )}
 
       {myReportsOpen && <MyReportsDialog onClose={() => setMyReportsOpen(false)} />}
+      {analyticsOpen && <AnalyticsDashboard onClose={() => setAnalyticsOpen(false)} />}
     </div>
   );
 }
