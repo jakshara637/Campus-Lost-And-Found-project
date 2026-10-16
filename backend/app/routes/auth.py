@@ -379,14 +379,14 @@ async def google_callback(
         # Login must never create an account implicitly.
         if auth_mode == "login" and user is None:
             return RedirectResponse(
-                url="http://localhost:5173/#auth_error=google_login_failed&auth_mode=register",
+                url=settings.frontend_origin.rstrip("/") + "/#auth_error=google_login_failed&auth_mode=register",
                 status_code=302,
             )
 
         # Registration must never silently sign into an existing account.
         if auth_mode == "register" and user is not None:
             return RedirectResponse(
-                url="http://localhost:5173/#auth_error=account_exists&auth_mode=register",
+                url=settings.frontend_origin.rstrip("/") + "/#auth_error=account_exists&auth_mode=register",
                 status_code=302,
             )
 
@@ -413,7 +413,7 @@ async def google_callback(
 
         # The frontend will read the token from the URL fragment.
         return RedirectResponse(
-            url=f"http://localhost:5173/#access_token={access_token}",
+            url=f"{settings.frontend_origin.rstrip(chr(47))}/#access_token={access_token}",
             status_code=302,
         )
 
@@ -422,11 +422,11 @@ async def google_callback(
         # not leave them on a backend JSON error page.
         if auth_mode == "login":
             return RedirectResponse(
-                url="http://localhost:5173/#auth_error=google_login_failed&auth_mode=register",
+                url=settings.frontend_origin.rstrip("/") + "/#auth_error=google_login_failed&auth_mode=register",
                 status_code=302,
             )
         return RedirectResponse(
-            url="http://localhost:5173/#auth_error=google_register_failed&auth_mode=register",
+            url=settings.frontend_origin.rstrip("/") + "/#auth_error=google_register_failed&auth_mode=register",
             status_code=302,
         )
     except Exception:
@@ -434,11 +434,11 @@ async def google_callback(
         logging.exception("Google OAuth callback failed")
         if auth_mode == "login":
             return RedirectResponse(
-                url="http://localhost:5173/#auth_error=google_login_failed&auth_mode=register",
+                url=settings.frontend_origin.rstrip("/") + "/#auth_error=google_login_failed&auth_mode=register",
                 status_code=302,
             )
         return RedirectResponse(
-            url="http://localhost:5173/#auth_error=google_register_failed&auth_mode=register",
+            url=settings.frontend_origin.rstrip("/") + "/#auth_error=google_register_failed&auth_mode=register",
             status_code=302,
         )
 
