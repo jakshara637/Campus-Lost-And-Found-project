@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 
 from sqlalchemy import (String, Text, Boolean, Integer, DateTime, ForeignKey)
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
 
@@ -53,10 +53,19 @@ class Item(Base):
     posted_by: Mapped[int] = mapped_column(
         ForeignKey("users.id")
     )
+    owner: Mapped["User"] = relationship("User", lazy="joined")
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(timezone.utc)
     )
+
+    @property
+    def posted_by_name(self) -> str | None:
+        return self.owner.full_name if self.owner is not None else None
+
+    @property
+    def posted_by_email(self) -> str | None:
+        return self.owner.email if self.owner is not None else None
 
 
 class Claim(Base):
