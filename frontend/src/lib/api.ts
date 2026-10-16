@@ -210,3 +210,28 @@ export async function fetchMyReports(): Promise<ApiItem[]> {
 export async function deleteItem(itemId: number): Promise<void> {
   await authenticatedFetch(`/items/${itemId}`, { method: "DELETE" });
 }
+
+
+export type AnalyticsDashboardData = {
+  overview: {
+    total_reports: number;
+    lost_reports: number;
+    found_reports: number;
+    resolved_reports: number;
+    open_reports: number;
+    claim_requested_reports: number;
+    resolution_rate: number;
+    total_claims: number;
+    pending_claims: number;
+    approved_claims: number;
+  };
+  categories: { category: string; count: number }[];
+  daily_activity: { date: string; lost: number; found: number }[];
+  generated_at: string;
+};
+
+export async function fetchAnalytics(): Promise<AnalyticsDashboardData> {
+  const response = await fetch(apiUrl("/analytics/dashboard"));
+  await ensureSuccess(response);
+  return (await response.json()) as AnalyticsDashboardData;
+}
