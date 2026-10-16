@@ -112,6 +112,7 @@ function App() {
   const [isLoadingItems, setIsLoadingItems] = useState(true);
   const [itemsError, setItemsError] = useState("");
   const [dialogMode, setDialogMode] = useState<DialogMode | null>(null);
+  const [oauthError, setOauthError] = useState("");
   const [reportType, setReportType] = useState<ItemType>("Lost");
   const [refreshKey, setRefreshKey] = useState(0);
   const [currentUser, setCurrentUser] = useState<ApiUser | null>(null);
@@ -145,24 +146,36 @@ function App() {
 
   useEffect(() => {
     const hash = window.location.hash;
-
-    if (!hash.includes("access_token=")) {
-      return;
-    }
+    if (!hash) return;
 
     const params = new URLSearchParams(hash.slice(1));
     const token = params.get("access_token");
+    const authError = params.get("auth_error");
+    const authMode = params.get("auth_mode");
 
     if (token) {
       saveAccessToken(token);
     }
 
-    // Remove the token from the visible URL after saving it.
-    window.history.replaceState(
-      null,
-      document.title,
-      window.location.pathname + window.location.search,
-    );
+    if (authError) {
+      setDialogMode(authMode === "register" ? "register" : "login");
+      setOauthError(
+        authError === "account_not_found"
+          ? "No account is registered with this Google email. Please create an account first."
+          : authError === "account_exists"
+            ? "An account already exists with this Google email. Please log in instead."
+            : "Google sign-in could not be completed. Please try again.",
+      );
+    }
+
+    if (token || authError) {
+      // Remove authentication details from the visible URL.
+      window.history.replaceState(
+        null,
+        document.title,
+        window.location.pathname + window.location.search,
+      );
+    }
   }, []);
 
   useEffect(() => {
@@ -720,7 +733,11 @@ function App() {
         <PortalDialog
           mode={dialogMode}
           reportType={reportType}
-          onClose={() => setDialogMode(null)}
+          oauthError={oauthError}
+          onClose={() => {
+            setDialogMode(null);
+            setOauthError("");
+          }}
           onSuccess={handleDialogSuccess}
         />
       )}
