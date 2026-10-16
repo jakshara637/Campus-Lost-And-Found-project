@@ -1920,3 +1920,52 @@ button:disabled {
     animation-duration: 1.8s;
   }
 }
+
+
+/* Claim workflow actions */
+.item-claim-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.item-claim-button,
+.item-review-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 9px 13px;
+  border: 1px solid #dcd8fa;
+  border-radius: 10px;
+  color: #5949b6;
+  background: #f7f5ff;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 160ms ease, transform 160ms ease, border-color 160ms ease;
+}
+
+.item-claim-button:hover,
+.item-review-button:hover {
+  transform: translateY(-1px);
+  border-color: #a9a0ed;
+  background: #eeebff;
+}
+
+.item-review-button {
+  border-color: #c6e9d6;
+  color: #176544;
+  background: #f1fbf5;
+}
+
+.item-review-button:hover {
+  border-color: #8bd2ad;
+  background: #e3f8ec;
+}
+
+@media (max-width: 520px) {
+  .item-claim-actions > button {
+    width: 100%;
+  }
+}
