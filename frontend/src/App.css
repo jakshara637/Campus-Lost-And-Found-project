@@ -1969,3 +1969,241 @@ button:disabled {
     width: 100%;
   }
 }
+
+
+/* Signed-in account menu */
+.header-actions {
+  align-items: center;
+}
+
+.account-menu-wrap {
+  position: relative;
+}
+
+.account-menu-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 5px 11px 5px 6px;
+  border: 1px solid #e4e7f2;
+  border-radius: 15px;
+  color: #26335f;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.account-menu-trigger:hover,
+.account-menu-trigger-open {
+  border-color: #c9c3f5;
+  background: #fbfaff;
+  box-shadow: 0 7px 20px #29205f0d;
+}
+
+.account-avatar {
+  display: inline-grid;
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 1px solid #dedbff;
+  border-radius: 12px;
+  color: #5949b6;
+  background: linear-gradient(145deg, #f0edff, #e8efff);
+}
+
+.account-trigger-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  max-width: 190px;
+}
+
+.account-trigger-copy strong {
+  overflow: hidden;
+  max-width: 190px;
+  color: #202b50;
+  font-size: 12px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-trigger-copy small {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #68738f;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.account-online-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #20a36b;
+  box-shadow: 0 0 0 3px #20a36b1a;
+}
+
+.account-menu-trigger > svg {
+  color: #7d86a0;
+  transition: transform 160ms ease;
+}
+
+.account-menu-trigger > .account-chevron-open {
+  transform: rotate(180deg);
+}
+
+.account-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 120;
+  width: min(330px, calc(100vw - 32px));
+  padding: 12px;
+  border: 1px solid #e8e9f4;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 22px 55px #1c28551c, 0 4px 12px #1c28550b;
+  animation: rise-in 160ms ease both;
+}
+
+.account-dropdown-heading {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 8px 7px 13px;
+}
+
+.account-avatar-large {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+}
+
+.account-dropdown-heading > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.account-dropdown-heading strong {
+  overflow: hidden;
+  color: #202b50;
+  font-size: 13px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-dropdown-heading span:not(.account-avatar) {
+  overflow-wrap: anywhere;
+  color: #737d97;
+  font-size: 11px;
+}
+
+.account-session-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding: 11px;
+  border: 1px solid #d9f0e4;
+  border-radius: 11px;
+  color: #24724f;
+  background: #f3fbf6;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.account-dropdown-action {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 10px;
+  border: 0;
+  border-radius: 10px;
+  color: #364263;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.account-dropdown-action:hover {
+  background: #f5f4ff;
+  color: #5949b6;
+}
+
+.account-dropdown-action > svg:last-child {
+  margin-left: auto;
+  color: #8b91a8;
+}
+
+.account-logout-action {
+  color: #a23a49;
+}
+
+.account-logout-action:hover {
+  color: #982d3d;
+  background: #fff4f4;
+}
+
+.mobile-account-summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 10px 3px 13px;
+}
+
+.mobile-account-summary > span:last-child {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mobile-account-summary strong {
+  overflow: hidden;
+  color: #26335f;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mobile-account-summary small {
+  overflow: hidden;
+  color: #68738f;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .mobile-nav-actions {
+    flex-direction: column;
+  }
+
+  .mobile-account-summary {
+    width: 100%;
+  }
+
+  .mobile-nav-actions .button {
+    min-height: 43px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .account-dropdown {
+    animation: none;
+  }
+}
