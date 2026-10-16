@@ -53,7 +53,7 @@
 .portal-dialog-eyebrow {
   margin: 20px 0 8px;
   color: #7062c8;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
   letter-spacing: 1.35px;
 }
@@ -62,7 +62,7 @@
   margin: 0;
   color: #1d2b56;
   font-family: "Manrope", sans-serif;
-  font-size: clamp(29px, 5vw, 37px);
+  font-size: clamp(25px, 5vw, 32px);
   letter-spacing: -1px;
   line-height: 1.2;
 }
@@ -70,7 +70,7 @@
 .portal-dialog-intro {
   margin: 10px 0 22px;
   color: #6b7590;
-  font-size: 17px;
+  font-size: 14px;
   line-height: 1.7;
 }
 
@@ -83,7 +83,7 @@
   display: grid;
   gap: 7px;
   color: #34415f;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 750;
 }
 
@@ -99,7 +99,7 @@
   color: #1f2c4f;
   background: #fbfcff;
   font: inherit;
-  font-size: 17px;
+  font-size: 14px;
   font-weight: 450;
   transition: border-color 160ms ease, box-shadow 160ms ease;
 }
@@ -121,7 +121,7 @@
   min-height: 47px;
   margin-top: 4px;
   border: 0;
-  font-size: 17px;
+  font-size: 14px;
 }
 
 .portal-dialog-submit:disabled {
@@ -136,7 +136,7 @@
   margin: 0 0 16px;
   padding: 11px 13px;
   border-radius: 11px;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 1.6;
 }
 
@@ -162,7 +162,7 @@
   justify-content: center;
   margin-top: 20px;
   color: #727c95;
-  font-size: 14px;
+  font-size: 12px;
   text-align: center;
 }
 
@@ -182,7 +182,7 @@
 
 .portal-dialog-text-button {
   justify-self: start;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .portal-dialog-text-button:disabled {
@@ -205,7 +205,7 @@
   border-radius: 9px;
   color: #69738d;
   background: transparent;
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 750;
   cursor: pointer;
 }
@@ -232,7 +232,7 @@
 .portal-dialog-upload span {
   overflow: hidden;
   color: #586480;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -288,7 +288,7 @@
   color: #263452;
   background: #fff;
   font-family: inherit;
-  font-size: 17px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   transition: background 160ms ease, border-color 160ms ease,
@@ -316,7 +316,7 @@
   color: #4285f4;
   background: #fff;
   font-family: Arial, sans-serif;
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 800;
 }
 
@@ -326,7 +326,7 @@
   gap: 12px;
   margin: 0 0 16px;
   color: #8992a8;
-  font-size: 13px;
+  font-size: 11px;
 }
 
 .google-signin-divider::before,
