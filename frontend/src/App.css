@@ -79,7 +79,7 @@ button:disabled {
   padding: 7px 16px;
   color: #e9e7ff;
   background: #172554;
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 0.025em;
 }
 
@@ -128,7 +128,7 @@ button:disabled {
 .brand-copy strong {
   color: #172554;
   font-family: "Manrope", sans-serif;
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 800;
   letter-spacing: -1.1px;
   line-height: 1;
@@ -140,7 +140,7 @@ button:disabled {
 
 .brand-copy small {
   color: #8b91a8;
-  font-size: 8px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 1.15px;
 }
@@ -157,7 +157,7 @@ button:disabled {
   color: #6b7289;
   background: transparent;
   border: 0;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: color 180ms ease;
@@ -181,7 +181,7 @@ button:disabled {
   padding: 0 17px;
   border: 1px solid transparent;
   border-radius: 10px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   white-space: nowrap;
   cursor: pointer;
@@ -231,7 +231,7 @@ button:disabled {
   min-height: 51px;
   padding: 0 19px;
   border-radius: 12px;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .mobile-menu-toggle,
@@ -262,7 +262,7 @@ button:disabled {
   align-items: center;
   gap: 9px;
   color: #7165c7;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 1.6px;
 }
@@ -283,7 +283,7 @@ button:disabled {
   margin: 23px 0 20px;
   color: #172554;
   font-family: "Manrope", sans-serif;
-  font-size: clamp(42px, 5vw, 68px);
+  font-size: clamp(49px, 5vw, 79px);
   font-weight: 800;
   letter-spacing: -3.5px;
   line-height: 1.1;
@@ -297,7 +297,7 @@ button:disabled {
   max-width: 455px;
   margin: 0;
   color: #727b94;
-  font-size: 14px;
+  font-size: 17px;
   line-height: 1.9;
 }
 
@@ -328,7 +328,7 @@ button:disabled {
   margin-left: -3px;
   border: 2px solid #ffffff;
   border-radius: 50%;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
 }
 
@@ -360,12 +360,12 @@ button:disabled {
 
 .hero-trust strong {
   color: #303957;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .hero-trust span:not(.avatar) {
   color: #9298ab;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .hero-visual {
@@ -444,12 +444,12 @@ button:disabled {
 
 .hero-image-caption strong {
   font-family: "Manrope", sans-serif;
-  font-size: 14px;
+  font-size: 17px;
 }
 
 .hero-image-caption span:last-child {
   color: #e1e4f3;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .visual-label {
@@ -459,7 +459,7 @@ button:disabled {
   align-items: center;
   gap: 8px;
   color: #59627f;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 1px;
 }
@@ -491,12 +491,12 @@ button:disabled {
 
 .floating-card strong {
   color: #26335f;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .floating-card span:last-child {
   color: #9298ab;
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .floating-icon {
@@ -609,12 +609,12 @@ button:disabled {
 
 .benefit strong {
   color: #28335c;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .benefit span:last-child {
   color: #8a91a7;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .section-container {
@@ -639,7 +639,7 @@ button:disabled {
   margin: 13px 0 10px;
   color: #172554;
   font-family: "Manrope", sans-serif;
-  font-size: clamp(29px, 3.2vw, 40px);
+  font-size: clamp(34px, 3.2vw, 46px);
   font-weight: 800;
   letter-spacing: -1.8px;
   line-height: 1.2;
@@ -653,7 +653,7 @@ button:disabled {
 .how-heading > p {
   margin: 0;
   color: #8189a0;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.8;
 }
 
@@ -665,7 +665,7 @@ button:disabled {
   border: 0;
   color: #6551c2;
   background: transparent;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
   cursor: pointer;
 }
@@ -704,7 +704,7 @@ button:disabled {
   border-radius: 8px;
   color: #777f97;
   background: transparent;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: color 180ms ease, background 180ms ease, box-shadow 180ms ease;
@@ -742,7 +742,7 @@ button:disabled {
   outline: 0;
   color: #26335f;
   background: transparent;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .search-field input::placeholder {
@@ -817,7 +817,7 @@ button:disabled {
   padding: 7px 9px;
   border: 1px solid #ffffff8c;
   border-radius: 7px;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 800;
   backdrop-filter: blur(10px);
 }
@@ -869,7 +869,7 @@ button:disabled {
   align-items: center;
   gap: 6px;
   color: #8271cb;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
 }
 
@@ -878,7 +878,7 @@ button:disabled {
   margin: 9px 0 13px;
   color: #24305a;
   font-family: "Manrope", sans-serif;
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 800;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -897,7 +897,7 @@ button:disabled {
   gap: 7px;
   overflow: hidden;
   color: #8990a5;
-  font-size: 10px;
+  font-size: 11px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -918,7 +918,7 @@ button:disabled {
 
 .report-id {
   color: #a0a5b6;
-  font-size: 8px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.5px;
 }
@@ -928,7 +928,7 @@ button:disabled {
   align-items: center;
   gap: 4px;
   color: #6451bf;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -953,12 +953,12 @@ button:disabled {
   margin: 0;
   color: #26335f;
   font-family: "Manrope", sans-serif;
-  font-size: 17px;
+  font-size: 20px;
 }
 
 .empty-state p {
   margin: 0 0 8px;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .reports-note {
@@ -968,7 +968,7 @@ button:disabled {
   gap: 8px;
   margin-top: 24px;
   color: #969bb0;
-  font-size: 10px;
+  font-size: 11px;
   text-align: center;
 }
 
@@ -1032,7 +1032,7 @@ button:disabled {
   right: 19px;
   color: #e5e5f0;
   font-family: "Manrope", sans-serif;
-  font-size: 30px;
+  font-size: 35px;
   font-weight: 800;
 }
 
@@ -1060,7 +1060,7 @@ button:disabled {
   margin: 23px 0 9px;
   color: #24305a;
   font-family: "Manrope", sans-serif;
-  font-size: 16px;
+  font-size: 19px;
   font-weight: 800;
 }
 
@@ -1068,7 +1068,7 @@ button:disabled {
   max-width: 260px;
   margin: 0;
   color: #858ca2;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.8;
 }
 
@@ -1077,7 +1077,7 @@ button:disabled {
   right: 17px;
   bottom: 14px;
   color: #d8d6ea;
-  font-size: 8px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 1.5px;
 }
@@ -1113,7 +1113,7 @@ button:disabled {
   margin: 19px 0 15px;
   color: #ffffff;
   font-family: "Manrope", sans-serif;
-  font-size: clamp(28px, 3.4vw, 42px);
+  font-size: clamp(33px, 3.4vw, 49px);
   font-weight: 800;
   letter-spacing: -1.8px;
   line-height: 1.2;
@@ -1127,7 +1127,7 @@ button:disabled {
   max-width: 420px;
   margin: 0;
   color: #c2cae4;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.9;
 }
 
@@ -1228,18 +1228,18 @@ button:disabled {
 }
 
 .footer-brand .brand-copy strong {
-  font-size: 19px;
+  font-size: 22px;
 }
 
 .site-footer > p,
 .footer-copyright {
   color: #9399ac;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .back-to-top {
   color: #6451bf;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
 }
 
@@ -1287,7 +1287,7 @@ button:disabled {
   }
 
   .hero-copy h1 {
-    font-size: clamp(42px, 5.5vw, 58px);
+    font-size: clamp(49px, 5.5vw, 67px);
     letter-spacing: -2.7px;
   }
 
@@ -1328,7 +1328,7 @@ button:disabled {
   }
 
   .brand-copy strong {
-    font-size: 20px;
+    font-size: 23px;
   }
 
   .mobile-menu-toggle {
@@ -1390,13 +1390,13 @@ button:disabled {
 
   .hero-copy h1 {
     margin-top: 20px;
-    font-size: clamp(43px, 9vw, 61px);
+    font-size: clamp(50px, 9vw, 71px);
     letter-spacing: -2.8px;
   }
 
   .hero-description {
     max-width: 520px;
-    font-size: 13px;
+    font-size: 15px;
   }
 
   .hero-visual {
@@ -1444,13 +1444,13 @@ button:disabled {
   }
 
   .section-heading h2 {
-    font-size: 31px;
+    font-size: 36px;
   }
 
   .section-heading > .text-link {
     flex-shrink: 0;
     margin-top: 17px;
-    font-size: 10px;
+    font-size: 11px;
   }
 
   .report-toolbar {
@@ -1475,7 +1475,7 @@ button:disabled {
   }
 
   .item-card h3 {
-    font-size: 13px;
+    font-size: 15px;
   }
 
   .item-card-footer {
@@ -1509,7 +1509,7 @@ button:disabled {
   }
 
   .community-copy h2 {
-    font-size: 32px;
+    font-size: 37px;
   }
 
   .community-art {
@@ -1543,7 +1543,7 @@ button:disabled {
 
 @media (max-width: 420px) {
   .announcement-bar {
-    font-size: 9px;
+    font-size: 11px;
   }
 
   .hero-actions {
@@ -1556,7 +1556,7 @@ button:disabled {
   }
 
   .hero-copy h1 {
-    font-size: 42px;
+    font-size: 49px;
     letter-spacing: -2.4px;
   }
 
@@ -1603,7 +1603,7 @@ button:disabled {
     top: 7px;
     left: 7px;
     padding: 6px 7px;
-    font-size: 8px;
+    font-size: 11px;
   }
 
   .item-quick-action {
@@ -1614,15 +1614,15 @@ button:disabled {
   }
 
   .item-meta span {
-    font-size: 9px;
+    font-size: 11px;
   }
 
   .view-details {
-    font-size: 9px;
+    font-size: 11px;
   }
 
   .report-id {
-    font-size: 7px;
+    font-size: 11px;
   }
 }
 
@@ -1660,7 +1660,7 @@ button:disabled {
 }
 
 .nav-link {
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 650;
 }
 
@@ -1672,7 +1672,7 @@ button:disabled {
 }
 
 .header-actions .button {
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .section-container {
@@ -1706,7 +1706,7 @@ button:disabled {
   }
 
   .nav-link {
-    font-size: 13px;
+    font-size: 15px;
   }
 
   .section-container,
@@ -1721,11 +1721,11 @@ button:disabled {
   }
 
   .main-nav .nav-link {
-    font-size: 15px;
+    font-size: 18px;
   }
 
   .mobile-nav-actions .button {
-    font-size: 13px;
+    font-size: 15px;
   }
 
   .hero-section {
@@ -1742,35 +1742,35 @@ button:disabled {
 
 /* Readability improvements for benefits, how-it-works steps, and community CTA */
 .benefit strong {
-  font-size: 14px;
+  font-size: 17px;
   line-height: 1.45;
 }
 
 .benefit span:last-child {
   color: #68738f;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.6;
 }
 
 .step-card h3 {
-  font-size: 18px;
+  font-size: 21px;
   line-height: 1.45;
 }
 
 .step-card p {
   max-width: 290px;
   color: #626d89;
-  font-size: 14px;
+  font-size: 17px;
   line-height: 1.85;
 }
 
 .step-decoration {
   color: #b6b4d1;
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .community-copy h2 {
-  font-size: clamp(32px, 3.7vw, 46px);
+  font-size: clamp(37px, 3.7vw, 53px);
   line-height: 1.22;
 }
 
@@ -1780,7 +1780,7 @@ button:disabled {
 
 .community-copy p {
   color: #e0e6f7;
-  font-size: 15px;
+  font-size: 18px;
   line-height: 1.9;
 }
 
@@ -1789,32 +1789,32 @@ button:disabled {
 }
 
 .community-copy .button-light {
-  font-size: 14px;
+  font-size: 17px;
 }
 
 @media (max-width: 760px) {
   .benefit strong {
-    font-size: 14px;
+    font-size: 17px;
   }
 
   .benefit span:last-child {
-    font-size: 12px;
-  }
-
-  .step-card h3 {
-    font-size: 18px;
-  }
-
-  .step-card p {
     font-size: 14px;
   }
 
+  .step-card h3 {
+    font-size: 21px;
+  }
+
+  .step-card p {
+    font-size: 17px;
+  }
+
   .community-copy h2 {
-    font-size: clamp(32px, 7vw, 38px);
+    font-size: clamp(37px, 7vw, 44px);
   }
 
   .community-copy p {
-    font-size: 15px;
+    font-size: 18px;
   }
 }
 
@@ -1823,13 +1823,13 @@ button:disabled {
 .site-footer > p,
 .footer-copyright {
   color: #596581;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.7;
 }
 
 .back-to-top {
   color: #5b3cc4;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 750;
   text-decoration-thickness: 2px;
   text-underline-offset: 3px;
@@ -1837,7 +1837,7 @@ button:disabled {
 
 .footer-brand .brand-copy small {
   color: #68738f;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 1.15px;
 }
 
@@ -1845,11 +1845,11 @@ button:disabled {
   .site-footer > p,
   .footer-copyright,
   .back-to-top {
-    font-size: 13px;
+    font-size: 15px;
   }
 
   .footer-brand .brand-copy small {
-    font-size: 10px;
+    font-size: 11px;
   }
 }
 
@@ -1863,7 +1863,7 @@ button:disabled {
   min-height: 180px;
   padding: 28px;
   color: #4b5878;
-  font-size: 15px;
+  font-size: 18px;
   text-align: center;
 }
 
@@ -1882,7 +1882,7 @@ button:disabled {
 
 .reports-feedback-error h3 {
   color: #8f2d3b;
-  font-size: 19px;
+  font-size: 22px;
 }
 
 .reports-feedback-error p {
@@ -1911,7 +1911,7 @@ button:disabled {
   gap: 10px;
   color: #7c78b8;
   background: linear-gradient(135deg, #f2f0ff, #f8fafc);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
 }
 
@@ -1940,7 +1940,7 @@ button:disabled {
   border-radius: 10px;
   color: #5949b6;
   background: #f7f5ff;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 800;
   cursor: pointer;
   transition: background 160ms ease, transform 160ms ease, border-color 160ms ease;
@@ -2025,7 +2025,7 @@ button:disabled {
   overflow: hidden;
   max-width: 190px;
   color: #202b50;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 800;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -2036,7 +2036,7 @@ button:disabled {
   align-items: center;
   gap: 5px;
   color: #68738f;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 650;
 }
 
@@ -2096,7 +2096,7 @@ button:disabled {
 .account-dropdown-heading strong {
   overflow: hidden;
   color: #202b50;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 800;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -2105,7 +2105,7 @@ button:disabled {
 .account-dropdown-heading span:not(.account-avatar) {
   overflow-wrap: anywhere;
   color: #737d97;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .account-session-status {
@@ -2118,7 +2118,7 @@ button:disabled {
   border-radius: 11px;
   color: #24724f;
   background: #f3fbf6;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 650;
 }
 
@@ -2132,7 +2132,7 @@ button:disabled {
   border-radius: 10px;
   color: #364263;
   background: transparent;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   text-align: left;
   cursor: pointer;
@@ -2175,7 +2175,7 @@ button:disabled {
 .mobile-account-summary strong {
   overflow: hidden;
   color: #26335f;
-  font-size: 13px;
+  font-size: 15px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -2183,7 +2183,7 @@ button:disabled {
 .mobile-account-summary small {
   overflow: hidden;
   color: #68738f;
-  font-size: 11px;
+  font-size: 13px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
