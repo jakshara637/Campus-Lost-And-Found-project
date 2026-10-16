@@ -1,5 +1,8 @@
 import jwt
 from pwdlib import PasswordHash
+from fastapi import Request
+from fastapi.responses import RedirectResponse
+from authlib.integrations.starlette_client import OAuth
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jwt.exceptions import InvalidTokenError
@@ -20,6 +23,20 @@ from app.schemas import ( RegistrationPendingResponse, ResendOTP, VerifyOTP )
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 password_hash = PasswordHash.recommended()
+
+google_oauth = OAuth()
+
+google_oauth.register(
+    name="google",
+    client_id=settings.google_client_id,
+    client_secret=settings.google_client_secret,
+    server_metadata_url=(
+        "https://accounts.google.com/.well-known/openid-configuration"
+    ),
+    client_kwargs={
+        "scope": "openid email profile",
+    },
+)
 
 oauth2_scheme = OAuth2PasswordBearer( tokenUrl="/auth/login" )
 
@@ -300,6 +317,87 @@ def login_user(
         "access_token": token,
         "token_type": "bearer",
     }
+
+@router.get("/google")
+async def google_login(request: Request):
+    if not settings.google_client_id or not settings.google_client_secret:
+        raise HTTPException(
+            status_code=503,
+            detail="Google login is not configured.",
+        )
+
+    return await google_oauth.google.authorize_redirect(
+        request,
+        settings.google_redirect_uri,
+    )
+
+
+@router.get("/google/callback")
+async def google_callback(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    try:
+        token = await google_oauth.google.authorize_access_token(request)
+        google_user = token.get("userinfo")
+
+        if not google_user:
+            raise HTTPException(
+                status_code=401,
+                detail="Could not verify your Google account.",
+            )
+
+        email = str(google_user.get("email", "")).strip().lower()
+        email_verified = google_user.get("email_verified") is True
+        full_name = str(google_user.get("name") or "").strip()
+
+        if not email or not email_verified:
+            raise HTTPException(
+                status_code=403,
+                detail="Google must confirm your email address.",
+            )
+
+        user = (
+            db.query(models.User)
+            .filter(models.User.email == email)
+            .first()
+        )
+
+        if user is None:
+            user = models.User(
+                full_name=full_name or email.split("@")[0],
+                email=email,
+                password_hash=password_hash.hash(
+                    secrets.token_urlsafe(48)
+                ),
+                is_verified=True,
+            )
+            db.add(user)
+            db.commit()
+            db.refresh(user)
+
+        elif not user.is_verified:
+            # Google has verified control of this same email address.
+            user.is_verified = True
+            db.commit()
+            db.refresh(user)
+
+        access_token = create_access_token(user.id)
+
+        # The frontend will read the token from the URL fragment.
+        return RedirectResponse(
+            url=f"http://localhost:5173/#access_token={access_token}",
+            status_code=302,
+        )
+
+    except HTTPException:
+        raise
+    except Exception:
+        db.rollback()
+        raise HTTPException(
+            status_code=401,
+            detail="Google sign-in failed. Please try again.",
+        )
 
 
 def get_current_user(

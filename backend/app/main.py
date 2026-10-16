@@ -1,3 +1,8 @@
+import os
+
+from starlette.middleware.sessions import SessionMiddleware
+from app.database import settings
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -13,17 +18,6 @@ from app.routes.analytics import router as analytics_router
 
 
 Base.metadata.create_all(bind=engine)   # creates any missing tables when the application starts
-
-class Settings(BaseSettings):
-    database_url: str
-
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        extra="ignore",
-    )
-
-
-settings = Settings()
 
 engine = create_engine(
     settings.database_url,
@@ -45,6 +39,13 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+)
+
+app.add_middleware(
+    SessionMiddleware,
+    secret_key= settings.jwt_secret_key,
+    same_site="lax",
+    https_only=False,  # Local development only
 )
 
 app.include_router(items_router)

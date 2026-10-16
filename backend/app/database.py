@@ -12,6 +12,9 @@ class Settings(BaseSettings):
     smtp_username: str | None = None
     smtp_password: str | None = None
     smtp_from_email: str | None = None
+    google_client_id: str | None = None
+    google_client_secret: str | None = None
+    google_redirect_uri: str = "http://localhost:8000/auth/google/callback"
 
     model_config = SettingsConfigDict(
         env_file=".env",
