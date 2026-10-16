@@ -272,3 +272,67 @@
     animation: none;
   }
 }
+
+
+/* Google OAuth sign-in */
+.google-signin-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 48px;
+  margin-bottom: 16px;
+  border: 1px solid #dfe3ef;
+  border-radius: 11px;
+  color: #263452;
+  background: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.google-signin-button:hover {
+  border-color: #b8c3d8;
+  background: #f8faff;
+  box-shadow: 0 3px 10px rgba(29, 43, 86, 0.07);
+}
+
+.google-signin-button:focus-visible {
+  outline: 3px solid #8d80e855;
+  outline-offset: 2px;
+}
+
+.google-signin-icon {
+  display: grid;
+  width: 23px;
+  height: 23px;
+  place-items: center;
+  border: 1px solid #e2e6ee;
+  border-radius: 50%;
+  color: #4285f4;
+  background: #fff;
+  font-family: Arial, sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.google-signin-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 16px;
+  color: #8992a8;
+  font-size: 11px;
+}
+
+.google-signin-divider::before,
+.google-signin-divider::after {
+  flex: 1;
+  height: 1px;
+  background: #e9ecf4;
+  content: "";
+}
