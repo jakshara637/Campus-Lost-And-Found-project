@@ -9,6 +9,7 @@ from fastapi.staticfiles import StaticFiles
 from app.routes.items import router as items_router, UPLOAD_DIR
 from app.routes.auth import router as auth_router
 from app.routes.claims import router as claims_router
+from app.routes.analytics import router as analytics_router
 
 
 Base.metadata.create_all(bind=engine)   # creates any missing tables when the application starts
@@ -49,6 +50,7 @@ app.add_middleware(
 app.include_router(items_router)
 app.include_router(auth_router)
 app.include_router(claims_router)
+app.include_router(analytics_router)
 
 app.mount(
     "/uploads",
