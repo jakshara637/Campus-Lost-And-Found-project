@@ -154,7 +154,14 @@ def verify_email_otp(
 
     now = datetime.now(timezone.utc)
 
-    if otp_record.expires_at <= now:
+    # SQLite may return a naive datetime even when the column
+    # is configured with timezone=True. Stored OTP timestamps are UTC.
+    expires_at = otp_record.expires_at
+
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+
+    if expires_at <= now:
         db.delete(otp_record)
         db.commit()
         raise HTTPException(
