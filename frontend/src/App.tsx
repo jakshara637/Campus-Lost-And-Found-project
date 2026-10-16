@@ -1,6 +1,6 @@
 
 import { useEffect, useMemo, useState } from "react";
-import { apiUrl, fetchItems, fetchCurrentUser, getAccessToken, type ApiItem, type ApiUser } from "./lib/api";
+import { apiUrl, clearAccessToken, fetchItems, fetchCurrentUser, getAccessToken, type ApiItem, type ApiUser } from "./lib/api";
 import PortalDialog, { type DialogMode } from "./components/PortalDialog";
 import ClaimsDialog, { type ClaimsDialogMode } from "./components/ClaimsDialog";
 import {
@@ -201,7 +201,7 @@ function App() {
 
   function handleLogout() {
     // Clear the saved bearer token so protected actions require a fresh login.
-    localStorage.removeItem("campusloop_access_token");
+    clearAccessToken();
     setCurrentUser(null);
     setProfileMenuOpen(false);
     setMobileMenuOpen(false);
