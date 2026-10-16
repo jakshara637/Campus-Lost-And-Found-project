@@ -1738,3 +1738,82 @@ button:disabled {
     width: 90%;
   }
 }
+
+
+/* Readability improvements for benefits, how-it-works steps, and community CTA */
+.benefit strong {
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.benefit span:last-child {
+  color: #68738f;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.step-card h3 {
+  font-size: 18px;
+  line-height: 1.45;
+}
+
+.step-card p {
+  max-width: 290px;
+  color: #626d89;
+  font-size: 14px;
+  line-height: 1.85;
+}
+
+.step-decoration {
+  color: #b6b4d1;
+  font-size: 9px;
+}
+
+.community-copy h2 {
+  font-size: clamp(32px, 3.7vw, 46px);
+  line-height: 1.22;
+}
+
+.community-copy h2 span {
+  color: #ddd5ff;
+}
+
+.community-copy p {
+  color: #e0e6f7;
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+.eyebrow-light {
+  color: #e0d9ff;
+}
+
+.community-copy .button-light {
+  font-size: 14px;
+}
+
+@media (max-width: 760px) {
+  .benefit strong {
+    font-size: 14px;
+  }
+
+  .benefit span:last-child {
+    font-size: 12px;
+  }
+
+  .step-card h3 {
+    font-size: 18px;
+  }
+
+  .step-card p {
+    font-size: 14px;
+  }
+
+  .community-copy h2 {
+    font-size: clamp(32px, 7vw, 38px);
+  }
+
+  .community-copy p {
+    font-size: 15px;
+  }
+}
