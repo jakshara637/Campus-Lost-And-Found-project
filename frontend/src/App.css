@@ -1636,3 +1636,105 @@ button:disabled {
     transition-duration: 0.01ms !important;
   }
 }
+
+
+/* CampusLoop design refinements: clearer navigation, wider layout, sticky header */
+.site-shell {
+  /* Unlike overflow:hidden, clip does not create a scrolling ancestor that can
+     interfere with position: sticky. */
+  overflow: clip;
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  max-width: none;
+  padding: 18px clamp(24px, 5.5vw, 88px);
+  box-shadow: 0 5px 18px #17255408;
+}
+
+.main-nav {
+  gap: clamp(18px, 2vw, 30px);
+}
+
+.nav-link {
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.nav-link svg,
+.header-actions svg,
+.mobile-menu-toggle svg {
+  width: 19px;
+  height: 19px;
+}
+
+.header-actions .button {
+  font-size: 13px;
+}
+
+.section-container {
+  width: min(1280px, 92%);
+}
+
+.benefits-strip {
+  max-width: 1280px;
+  width: min(1280px, 92%);
+}
+
+.hero-section {
+  padding-right: clamp(28px, 5.5vw, 80px);
+  padding-left: clamp(28px, 5.5vw, 80px);
+}
+
+.site-footer {
+  max-width: none;
+  padding-right: clamp(28px, 5.5vw, 80px);
+  padding-left: clamp(28px, 5.5vw, 80px);
+}
+
+@media (max-width: 1050px) {
+  .site-header {
+    padding-right: 4%;
+    padding-left: 4%;
+  }
+
+  .main-nav {
+    gap: 15px;
+  }
+
+  .nav-link {
+    font-size: 13px;
+  }
+
+  .section-container,
+  .benefits-strip {
+    width: 92%;
+  }
+}
+
+@media (max-width: 760px) {
+  .site-header {
+    padding: 12px 5%;
+  }
+
+  .main-nav .nav-link {
+    font-size: 15px;
+  }
+
+  .mobile-nav-actions .button {
+    font-size: 13px;
+  }
+
+  .hero-section {
+    padding-right: 7%;
+    padding-left: 7%;
+  }
+
+  .section-container,
+  .benefits-strip {
+    width: 90%;
+  }
+}
