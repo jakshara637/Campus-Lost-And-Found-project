@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { apiUrl, clearAccessToken, fetchItems, fetchCurrentUser, getAccessToken, type ApiItem, type ApiUser } from "./lib/api";
 import PortalDialog, { type DialogMode } from "./components/PortalDialog";
 import ClaimsDialog, { type ClaimsDialogMode } from "./components/ClaimsDialog";
+import MyReportsDialog from "./components/MyReportsDialog";
 import {
   ArrowDownRight,
   ArrowRight,
@@ -18,6 +19,7 @@ import {
   LogOut,
   MapPin,
   Menu,
+  PackageSearch,
   Search,
   ShieldCheck,
   Smartphone,
@@ -114,6 +116,7 @@ function App() {
   const [isCheckingUser, setIsCheckingUser] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [claimsDialogMode, setClaimsDialogMode] = useState<ClaimsDialogMode | null>(null);
+  const [myReportsOpen, setMyReportsOpen] = useState(false);
   const [selectedClaimItem, setSelectedClaimItem] = useState<CampusItem | null>(null);
 
   useEffect(() => {
@@ -262,6 +265,9 @@ function App() {
                 <button className="button button-outline" type="button" onClick={() => { openClaimDialog("mine"); setMobileMenuOpen(false); }}>
                   My claims
                 </button>
+                <button className="button button-outline" type="button" onClick={() => { setMyReportsOpen(true); setMobileMenuOpen(false); }}>
+                  <PackageSearch size={16} /> My reports
+                </button>
                 <button className="button button-primary" type="button" onClick={handleLogout}>
                   <LogOut size={16} /> Log out
                 </button>
@@ -310,6 +316,9 @@ function App() {
                   </div>
                   <button className="account-dropdown-action" type="button" role="menuitem" onClick={() => { setProfileMenuOpen(false); openClaimDialog("mine"); }}>
                     <ShieldCheck size={17} /> My claims <ArrowRight size={15} />
+                  </button>
+                  <button className="account-dropdown-action" type="button" role="menuitem" onClick={() => { setProfileMenuOpen(false); setMyReportsOpen(true); }}>
+                    <PackageSearch size={17} /> My reports <ArrowRight size={15} />
                   </button>
                   <button className="account-dropdown-action account-logout-action" type="button" role="menuitem" onClick={handleLogout}>
                     <LogOut size={17} /> Log out <ArrowRight size={15} />
@@ -694,6 +703,8 @@ function App() {
           onSuccess={handleClaimsSuccess}
         />
       )}
+
+      {myReportsOpen && <MyReportsDialog onClose={() => setMyReportsOpen(false)} />}
     </div>
   );
 }
