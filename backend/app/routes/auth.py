@@ -275,9 +275,13 @@ async def resend_email_otp(
     try:
         await send_otp_email(email, otp)
     except Exception:
+        logging.exception("OTP email delivery failed")
         raise HTTPException(
             status_code=503,
-            detail="Email delivery failed. Please try again later.",
+            detail=(
+                "Email delivery failed. Check the email configuration "
+                "and request a new OTP."
+            ),
         )
 
     return generic_response
