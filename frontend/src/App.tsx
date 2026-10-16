@@ -1,7 +1,8 @@
 
 import { useEffect, useMemo, useState } from "react";
-import { apiUrl, fetchItems, type ApiItem } from "./lib/api";
+import { apiUrl, fetchItems, fetchCurrentUser, getAccessToken, type ApiItem, type ApiUser } from "./lib/api";
 import PortalDialog, { type DialogMode } from "./components/PortalDialog";
+import ClaimsDialog, { type ClaimsDialogMode } from "./components/ClaimsDialog";
 import {
   ArrowDownRight,
   ArrowRight,
@@ -38,6 +39,7 @@ type CampusItem = {
   icon: typeof Laptop;
   description: string;
   status: string;
+  postedBy: number;
 };
 
 function formatItemDate(value: string): string {
@@ -86,6 +88,7 @@ function mapApiItem(item: ApiItem): CampusItem {
     icon,
     description: item.description,
     status: item.status,
+    postedBy: item.posted_by,
   };
 }
 
@@ -105,6 +108,9 @@ function App() {
   const [dialogMode, setDialogMode] = useState<DialogMode | null>(null);
   const [reportType, setReportType] = useState<ItemType>("Lost");
   const [refreshKey, setRefreshKey] = useState(0);
+  const [currentUser, setCurrentUser] = useState<ApiUser | null>(null);
+  const [claimsDialogMode, setClaimsDialogMode] = useState<ClaimsDialogMode | null>(null);
+  const [selectedClaimItem, setSelectedClaimItem] = useState<CampusItem | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -125,6 +131,18 @@ function App() {
 
     void loadItems();
     return () => controller.abort();
+  }, [refreshKey]);
+
+  useEffect(() => {
+    let active = true;
+    if (!getAccessToken()) {
+      setCurrentUser(null);
+      return () => { active = false; };
+    }
+    void fetchCurrentUser()
+      .then((user) => { if (active) setCurrentUser(user); })
+      .catch(() => { if (active) setCurrentUser(null); });
+    return () => { active = false; };
   }, [refreshKey]);
 
   const visibleItems = useMemo(() => {
@@ -158,6 +176,21 @@ function App() {
 
   function handleDialogSuccess() {
     setDialogMode(null);
+    setRefreshKey((current) => current + 1);
+  }
+
+  function openClaimDialog(mode: ClaimsDialogMode, item?: CampusItem) {
+    if (!getAccessToken()) {
+      setDialogMode("login");
+      return;
+    }
+    setSelectedClaimItem(item ?? null);
+    setClaimsDialogMode(mode);
+  }
+
+  function handleClaimsSuccess() {
+    setClaimsDialogMode(null);
+    setSelectedClaimItem(null);
     setRefreshKey((current) => current + 1);
   }
 
@@ -366,8 +399,8 @@ function App() {
               <h2>Recently on campus<span>.</span></h2>
               <p>Take a look around. Your missing item might be right here.</p>
             </div>
-            <button className="text-link" type="button" onClick={() => alert("The full browse page will be built in a later step.")}>
-              Explore all reports <ArrowRight size={17} />
+            <button className="text-link" type="button" onClick={() => openClaimDialog("mine")}>
+              My claims <ArrowRight size={17} />
             </button>
           </div>
 
@@ -452,6 +485,21 @@ function App() {
                     <div className="item-card-footer">
                       <span className="report-id">REPORT #{String(item.id).padStart(4, "0")}</span>
                       <span className="view-details">View details <ArrowRight size={14} /></span>
+                    </div>
+                    <div className="item-claim-actions">
+                      {item.type === "Found" && item.status === "open" && item.postedBy !== currentUser?.id && (
+                        <button className="item-claim-button" type="button" onClick={() => {
+                          if (!getAccessToken()) { setDialogMode("login"); return; }
+                          openClaimDialog("claim", item);
+                        }}>
+                          Claim this item
+                        </button>
+                      )}
+                      {currentUser && item.postedBy === currentUser.id && item.type === "Found" && item.status === "claim_requested" && (
+                        <button className="item-review-button" type="button" onClick={() => openClaimDialog("review", item)}>
+                          Review claims
+                        </button>
+                      )}
                     </div>
                   </div>
                 </article>
@@ -560,6 +608,16 @@ function App() {
           reportType={reportType}
           onClose={() => setDialogMode(null)}
           onSuccess={handleDialogSuccess}
+        />
+      )}
+
+      {claimsDialogMode && (
+        <ClaimsDialog
+          mode={claimsDialogMode}
+          itemId={selectedClaimItem?.id}
+          itemTitle={selectedClaimItem?.title}
+          onClose={() => { setClaimsDialogMode(null); setSelectedClaimItem(null); }}
+          onSuccess={handleClaimsSuccess}
         />
       )}
     </div>
