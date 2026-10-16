@@ -228,6 +228,20 @@ def list_items(
     )
 
 
+@router.get("/mine", response_model=list[ItemResponse])
+def list_my_items(
+    current_user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Return only reports created by the authenticated user."""
+    return (
+        db.query(models.Item)
+        .filter(models.Item.posted_by == current_user.id)
+        .order_by(models.Item.created_at.desc())
+        .all()
+    )
+
+
 @router.get("/{item_id}", response_model=ItemResponse)
 def get_item(
     item_id: int,
