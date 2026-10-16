@@ -16,6 +16,7 @@ export type DialogMode = "login" | "register" | "report";
 type PortalDialogProps = {
   mode: DialogMode;
   reportType?: "Lost" | "Found";
+  oauthError?: string;
   onClose: () => void;
   onSuccess: () => void;
 };
@@ -23,6 +24,7 @@ type PortalDialogProps = {
 export default function PortalDialog({
   mode: initialMode,
   reportType = "Lost",
+  oauthError,
   onClose,
   onSuccess,
 }: PortalDialogProps) {
@@ -43,7 +45,7 @@ export default function PortalDialog({
   const [location, setLocation] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(oauthError ?? "");
   const [busy, setBusy] = useState(false);
 
   function clearFeedback() {
@@ -141,7 +143,7 @@ export default function PortalDialog({
               className="google-signin-button"
               type="button"
               onClick={() => {
-                window.location.assign(apiUrl("/auth/google"));
+                window.location.assign(apiUrl(`/auth/google?mode=${mode}`));
               }}
             >
               <span className="google-signin-icon" aria-hidden="true">G</span>
