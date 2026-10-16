@@ -1,4 +1,5 @@
 import jwt
+import logging
 from pwdlib import PasswordHash
 from fastapi import Request
 from fastapi.responses import RedirectResponse
@@ -394,9 +395,10 @@ async def google_callback(
         raise
     except Exception:
         db.rollback()
+        logging.exception("Google OAuth callback failed")
         raise HTTPException(
             status_code=401,
-            detail="Google sign-in failed. Please try again.",
+            detail="Google sign-in failed. Check the backend terminal logs for details and try again.",
         )
 
 
