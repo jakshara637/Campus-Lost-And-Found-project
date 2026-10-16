@@ -346,9 +346,12 @@ async def google_callback(
     request: Request,
     db: Session = Depends(get_db),
 ):
+    # Read the selected action before exchanging the OAuth code, because
+    # that exchange itself can fail (for example, if the user cancels).
+    auth_mode = request.session.get("google_auth_mode", "login")
     try:
         token = await google_oauth.google.authorize_access_token(request)
-        auth_mode = request.session.pop("google_auth_mode", "login")
+        request.session.pop("google_auth_mode", None)
         google_user = token.get("userinfo")
 
         if not google_user:
@@ -376,7 +379,7 @@ async def google_callback(
         # Login must never create an account implicitly.
         if auth_mode == "login" and user is None:
             return RedirectResponse(
-                url="http://localhost:5173/#auth_error=account_not_found&auth_mode=login",
+                url="http://localhost:5173/#auth_error=google_login_failed&auth_mode=register",
                 status_code=302,
             )
 
@@ -415,13 +418,28 @@ async def google_callback(
         )
 
     except HTTPException:
-        raise
+        # OAuth callback failures should return the user to the portal form,
+        # not leave them on a backend JSON error page.
+        if auth_mode == "login":
+            return RedirectResponse(
+                url="http://localhost:5173/#auth_error=google_login_failed&auth_mode=register",
+                status_code=302,
+            )
+        return RedirectResponse(
+            url="http://localhost:5173/#auth_error=google_register_failed&auth_mode=register",
+            status_code=302,
+        )
     except Exception:
         db.rollback()
         logging.exception("Google OAuth callback failed")
-        raise HTTPException(
-            status_code=401,
-            detail="Google sign-in failed. Check the backend terminal logs for details and try again.",
+        if auth_mode == "login":
+            return RedirectResponse(
+                url="http://localhost:5173/#auth_error=google_login_failed&auth_mode=register",
+                status_code=302,
+            )
+        return RedirectResponse(
+            url="http://localhost:5173/#auth_error=google_register_failed&auth_mode=register",
+            status_code=302,
         )
 
 
