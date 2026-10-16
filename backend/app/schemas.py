@@ -26,6 +26,8 @@ class ItemResponse(BaseModel):  # defines the API response
     item_type: str
     status: str
     posted_by: int
+    posted_by_name: str | None = None
+    posted_by_email: str | None = None
     created_at: datetime
     model_config = ConfigDict(from_attributes=True)
 
