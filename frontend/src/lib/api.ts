@@ -12,6 +12,8 @@ export type ApiItem = {
   item_type: "lost" | "found";
   status: "open" | "claim_requested" | "resolved" | string;
   posted_by: number;
+  posted_by_name?: string | null;
+  posted_by_email?: string | null;
   created_at: string;
 };
 
