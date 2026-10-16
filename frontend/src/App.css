@@ -927,10 +927,15 @@ button:disabled {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  padding: 0;
+  border: 0;
   color: #6451bf;
+  background: transparent;
+  font-family: inherit;
   font-size: 11px;
   font-weight: 700;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .empty-state {
