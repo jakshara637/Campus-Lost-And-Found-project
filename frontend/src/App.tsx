@@ -160,11 +160,15 @@ function App() {
     if (authError) {
       setDialogMode(authMode === "register" ? "register" : "login");
       setOauthError(
-        authError === "account_not_found"
-          ? "No account is registered with this Google email. Please create an account first."
-          : authError === "account_exists"
-            ? "An account already exists with this Google email. Please log in instead."
-            : "Google sign-in could not be completed. Please try again.",
+        authError === "google_login_failed"
+          ? "Google sign-in failed. Please register with your email or try Google sign-in again."
+          : authError === "google_register_failed"
+            ? "Google registration failed. Please try again or register with your email."
+            : authError === "account_not_found"
+              ? "No account is registered with this Google email. Please create an account first."
+              : authError === "account_exists"
+                ? "An account already exists with this Google email. Please log in instead."
+                : "Google sign-in could not be completed. Please try again.",
       );
     }
 
