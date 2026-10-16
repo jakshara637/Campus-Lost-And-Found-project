@@ -320,13 +320,21 @@ def login_user(
     }
 
 @router.get("/google")
-async def google_login(request: Request):
+async def google_login(request: Request, mode: str = "login"):
     if not settings.google_client_id or not settings.google_client_secret:
         raise HTTPException(
             status_code=503,
             detail="Google login is not configured.",
         )
 
+    if mode not in {"login", "register"}:
+        raise HTTPException(
+            status_code=400,
+            detail="Google authentication mode must be login or register.",
+        )
+
+    # Keep the user's explicit choice across Google's redirect/callback.
+    request.session["google_auth_mode"] = mode
     return await google_oauth.google.authorize_redirect(
         request,
         settings.google_redirect_uri,
@@ -340,6 +348,7 @@ async def google_callback(
 ):
     try:
         token = await google_oauth.google.authorize_access_token(request)
+        auth_mode = request.session.pop("google_auth_mode", "login")
         google_user = token.get("userinfo")
 
         if not google_user:
@@ -364,6 +373,20 @@ async def google_callback(
             .first()
         )
 
+        # Login must never create an account implicitly.
+        if auth_mode == "login" and user is None:
+            return RedirectResponse(
+                url="http://localhost:5173/#auth_error=account_not_found&auth_mode=login",
+                status_code=302,
+            )
+
+        # Registration must never silently sign into an existing account.
+        if auth_mode == "register" and user is not None:
+            return RedirectResponse(
+                url="http://localhost:5173/#auth_error=account_exists&auth_mode=register",
+                status_code=302,
+            )
+
         if user is None:
             user = models.User(
                 full_name=full_name or email.split("@")[0],
@@ -378,7 +401,7 @@ async def google_callback(
             db.refresh(user)
 
         elif not user.is_verified:
-            # Google has verified control of this same email address.
+            # A verified Google identity proves control of this same email.
             user.is_verified = True
             db.commit()
             db.refresh(user)
