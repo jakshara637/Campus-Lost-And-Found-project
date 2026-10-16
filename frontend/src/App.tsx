@@ -15,12 +15,14 @@ import {
   Clock3,
   Compass,
   Laptop,
+  LogOut,
   MapPin,
   Menu,
   Search,
   ShieldCheck,
   Smartphone,
   Sparkles,
+  UserRound,
   Wallet,
   X,
 } from "lucide-react";
@@ -109,6 +111,8 @@ function App() {
   const [reportType, setReportType] = useState<ItemType>("Lost");
   const [refreshKey, setRefreshKey] = useState(0);
   const [currentUser, setCurrentUser] = useState<ApiUser | null>(null);
+  const [isCheckingUser, setIsCheckingUser] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [claimsDialogMode, setClaimsDialogMode] = useState<ClaimsDialogMode | null>(null);
   const [selectedClaimItem, setSelectedClaimItem] = useState<CampusItem | null>(null);
 
@@ -137,11 +141,14 @@ function App() {
     let active = true;
     if (!getAccessToken()) {
       setCurrentUser(null);
+      setIsCheckingUser(false);
       return () => { active = false; };
     }
+    setIsCheckingUser(true);
     void fetchCurrentUser()
       .then((user) => { if (active) setCurrentUser(user); })
-      .catch(() => { if (active) setCurrentUser(null); });
+      .catch(() => { if (active) setCurrentUser(null); })
+      .finally(() => { if (active) setIsCheckingUser(false); });
     return () => { active = false; };
   }, [refreshKey]);
 
@@ -192,6 +199,17 @@ function App() {
     setRefreshKey((current) => current + 1);
   }
 
+  function handleLogout() {
+    // Clear the saved bearer token so protected actions require a fresh login.
+    localStorage.removeItem("campusloop_access_token");
+    setCurrentUser(null);
+    setProfileMenuOpen(false);
+    setMobileMenuOpen(false);
+    setClaimsDialogMode(null);
+    setSelectedClaimItem(null);
+    setDialogMode(null);
+  }
+
   return (
     <div className="site-shell">
       <div className="announcement-bar">
@@ -235,30 +253,88 @@ function App() {
             Our community
           </a>
           <div className="mobile-nav-actions">
-            <button className="button button-outline" type="button" onClick={() => { setDialogMode("login"); setMobileMenuOpen(false); }}>
-              Log in
-            </button>
-            <button className="button button-primary" type="button" onClick={() => { setDialogMode("register"); setMobileMenuOpen(false); }}>
-              Get started <ArrowRight size={16} />
-            </button>
+            {currentUser ? (
+              <>
+                <div className="mobile-account-summary">
+                  <span className="account-avatar"><UserRound size={18} /></span>
+                  <span><strong>{currentUser.full_name}</strong><small>{currentUser.email}</small></span>
+                </div>
+                <button className="button button-outline" type="button" onClick={() => { openClaimDialog("mine"); setMobileMenuOpen(false); }}>
+                  My claims
+                </button>
+                <button className="button button-primary" type="button" onClick={handleLogout}>
+                  <LogOut size={16} /> Log out
+                </button>
+              </>
+            ) : (
+              <>
+                <button className="button button-outline" type="button" onClick={() => { setDialogMode("login"); setMobileMenuOpen(false); }}>
+                  Log in
+                </button>
+                <button className="button button-primary" type="button" onClick={() => { setDialogMode("register"); setMobileMenuOpen(false); }}>
+                  Get started <ArrowRight size={16} />
+                </button>
+              </>
+            )}
           </div>
         </nav>
 
         <div className="header-actions">
-          <button
-            className="button button-quiet"
-            type="button"
-            onClick={() => setDialogMode("login")}
-          >
-            Log in
-          </button>
-          <button
-            className="button button-primary header-cta"
-            type="button"
-            onClick={() => setDialogMode("register")}
-          >
-            Get started <ArrowUpRight size={16} />
-          </button>
+          {currentUser ? (
+            <div className="account-menu-wrap">
+              <button
+                className={`account-menu-trigger ${profileMenuOpen ? "account-menu-trigger-open" : ""}`}
+                type="button"
+                aria-expanded={profileMenuOpen}
+                aria-haspopup="true"
+                onClick={() => setProfileMenuOpen((open) => !open)}
+              >
+                <span className="account-avatar"><UserRound size={19} /></span>
+                <span className="account-trigger-copy">
+                  <strong>{currentUser.full_name}</strong>
+                  <small><span className="account-online-dot" /> Logged in</small>
+                </span>
+                <ChevronDown className={profileMenuOpen ? "account-chevron-open" : ""} size={16} />
+              </button>
+              {profileMenuOpen && (
+                <div className="account-dropdown" role="menu">
+                  <div className="account-dropdown-heading">
+                    <span className="account-avatar account-avatar-large"><UserRound size={22} /></span>
+                    <div>
+                      <strong>{currentUser.full_name}</strong>
+                      <span>{currentUser.email}</span>
+                    </div>
+                  </div>
+                  <div className="account-session-status">
+                    <span className="account-online-dot" /> You're signed in to CampusLoop
+                  </div>
+                  <button className="account-dropdown-action" type="button" role="menuitem" onClick={() => { setProfileMenuOpen(false); openClaimDialog("mine"); }}>
+                    <ShieldCheck size={17} /> My claims <ArrowRight size={15} />
+                  </button>
+                  <button className="account-dropdown-action account-logout-action" type="button" role="menuitem" onClick={handleLogout}>
+                    <LogOut size={17} /> Log out <ArrowRight size={15} />
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <>
+              <button
+                className="button button-quiet"
+                type="button"
+                onClick={() => setDialogMode("login")}
+              >
+                {isCheckingUser ? "Checking session…" : "Log in"}
+              </button>
+              <button
+                className="button button-primary header-cta"
+                type="button"
+                onClick={() => setDialogMode("register")}
+              >
+                Get started <ArrowUpRight size={16} />
+              </button>
+            </>
+          )}
         </div>
       </header>
 
