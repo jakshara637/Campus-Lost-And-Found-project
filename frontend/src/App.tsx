@@ -1,6 +1,6 @@
 
 import { useEffect, useMemo, useState } from "react";
-import { apiUrl, clearAccessToken, fetchItems, fetchCurrentUser, getAccessToken, type ApiItem, type ApiUser } from "./lib/api";
+import { apiUrl, clearAccessToken, fetchItems, fetchCurrentUser, getAccessToken, saveAccessToken, type ApiItem, type ApiUser } from "./lib/api";
 import PortalDialog, { type DialogMode } from "./components/PortalDialog";
 import ClaimsDialog, { type ClaimsDialogMode } from "./components/ClaimsDialog";
 import MyReportsDialog from "./components/MyReportsDialog";
@@ -142,6 +142,28 @@ function App() {
     void loadItems();
     return () => controller.abort();
   }, [refreshKey]);
+
+  useEffect(() => {
+    const hash = window.location.hash;
+
+    if (!hash.includes("access_token=")) {
+      return;
+    }
+
+    const params = new URLSearchParams(hash.slice(1));
+    const token = params.get("access_token");
+
+    if (token) {
+      saveAccessToken(token);
+    }
+
+    // Remove the token from the visible URL after saving it.
+    window.history.replaceState(
+      null,
+      document.title,
+      window.location.pathname + window.location.search,
+    );
+  }, []);
 
   useEffect(() => {
     let active = true;
