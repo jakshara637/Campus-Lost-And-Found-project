@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { ArrowLeft, Camera, CheckCircle2, LockKeyhole, X } from "lucide-react";
 import {
+  apiUrl,
   createItem,
   getAccessToken,
   loginUser,
@@ -133,6 +134,25 @@ export default function PortalDialog({
         <p className="portal-dialog-eyebrow">CAMPUSLOOP · YOUR CAMPUS COMMUNITY</p>
         <h2 id="portal-dialog-title">{heading}</h2>
         <p className="portal-dialog-intro">{intro}</p>
+
+        {mode === "login" && (
+          <>
+            <button
+              className="google-signin-button"
+              type="button"
+              onClick={() => {
+                window.location.assign(apiUrl("/auth/google"));
+              }}
+            >
+              <span className="google-signin-icon" aria-hidden="true">G</span>
+              Continue with Google
+            </button>
+
+            <div className="google-signin-divider">
+              <span>or continue with email</span>
+            </div>
+          </>
+        )}
 
         {error && <div className="portal-dialog-alert portal-dialog-alert-error" role="alert">{error}</div>}
         {message && <div className="portal-dialog-alert portal-dialog-alert-success" role="status"><CheckCircle2 size={17} />{message}</div>}
