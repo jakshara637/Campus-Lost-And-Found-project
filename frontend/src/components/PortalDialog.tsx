@@ -135,7 +135,7 @@ export default function PortalDialog({
         <h2 id="portal-dialog-title">{heading}</h2>
         <p className="portal-dialog-intro">{intro}</p>
 
-        {mode === "login" && (
+        {(mode === "login" || mode === "register") && (
           <>
             <button
               className="google-signin-button"
@@ -145,7 +145,7 @@ export default function PortalDialog({
               }}
             >
               <span className="google-signin-icon" aria-hidden="true">G</span>
-              Continue with Google
+              {mode === "register" ? "Sign up with Google" : "Continue with Google"}
             </button>
 
             <div className="google-signin-divider">
