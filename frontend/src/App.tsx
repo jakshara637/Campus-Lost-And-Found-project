@@ -1,6 +1,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { apiUrl, fetchItems, type ApiItem } from "./lib/api";
+import PortalDialog, { type DialogMode } from "./components/PortalDialog";
 import {
   ArrowDownRight,
   ArrowRight,
@@ -101,6 +102,9 @@ function App() {
   const [items, setItems] = useState<CampusItem[]>([]);
   const [isLoadingItems, setIsLoadingItems] = useState(true);
   const [itemsError, setItemsError] = useState("");
+  const [dialogMode, setDialogMode] = useState<DialogMode | null>(null);
+  const [reportType, setReportType] = useState<ItemType>("Lost");
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -121,7 +125,7 @@ function App() {
 
     void loadItems();
     return () => controller.abort();
-  }, []);
+  }, [refreshKey]);
 
   const visibleItems = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
@@ -148,9 +152,13 @@ function App() {
   }
 
   function handleReportClick(type: ItemType) {
-    alert(
-      `The "${type}" report form will be connected to your account in a later step.`,
-    );
+    setReportType(type);
+    setDialogMode("report");
+  }
+
+  function handleDialogSuccess() {
+    setDialogMode(null);
+    setRefreshKey((current) => current + 1);
   }
 
   return (
@@ -196,10 +204,10 @@ function App() {
             Our community
           </a>
           <div className="mobile-nav-actions">
-            <button className="button button-outline" type="button" onClick={() => alert("Login will be connected in the authentication step.")}>
+            <button className="button button-outline" type="button" onClick={() => { setDialogMode("login"); setMobileMenuOpen(false); }}>
               Log in
             </button>
-            <button className="button button-primary" type="button" onClick={() => alert("Registration will be connected in the authentication step.")}>
+            <button className="button button-primary" type="button" onClick={() => { setDialogMode("register"); setMobileMenuOpen(false); }}>
               Get started <ArrowRight size={16} />
             </button>
           </div>
@@ -209,14 +217,14 @@ function App() {
           <button
             className="button button-quiet"
             type="button"
-            onClick={() => alert("Login will be connected in the authentication step.")}
+            onClick={() => setDialogMode("login")}
           >
             Log in
           </button>
           <button
             className="button button-primary header-cta"
             type="button"
-            onClick={() => alert("Registration will be connected in the authentication step.")}
+            onClick={() => setDialogMode("register")}
           >
             Get started <ArrowUpRight size={16} />
           </button>
@@ -545,6 +553,15 @@ function App() {
         <a href="#home" className="back-to-top">Back to top ↑</a>
         <span className="footer-copyright">© {new Date().getFullYear()} CampusLoop</span>
       </footer>
+
+      {dialogMode && (
+        <PortalDialog
+          mode={dialogMode}
+          reportType={reportType}
+          onClose={() => setDialogMode(null)}
+          onSuccess={handleDialogSuccess}
+        />
+      )}
     </div>
   );
 }
