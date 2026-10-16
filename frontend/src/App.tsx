@@ -124,9 +124,9 @@ function App() {
   return (
     <div className="site-shell">
       <div className="announcement-bar">
-        <Sparkles size={14} aria-hidden="true" />
+        {/* <Sparkles size={14} aria-hidden="true" />
         <span>A little kindness goes a long way on campus.</span>
-        <ArrowUpRight size={14} aria-hidden="true" />
+        <ArrowUpRight size={14} aria-hidden="true" /> */}
       </div>
 
       <header className="site-header">
