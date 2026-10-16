@@ -43,7 +43,7 @@ app.add_middleware(
 
 app.add_middleware(
     SessionMiddleware,
-    secret_key= settings.jwt_secret_key,
+    secret_key=settings.session_secret_key or settings.jwt_secret_key,
     same_site="lax",
     https_only=False,  # Local development only
 )
