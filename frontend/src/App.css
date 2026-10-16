@@ -1817,3 +1817,38 @@ button:disabled {
     font-size: 15px;
   }
 }
+
+
+/* Footer readability: stronger contrast and comfortable type sizes */
+.site-footer > p,
+.footer-copyright {
+  color: #596581;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.back-to-top {
+  color: #5b3cc4;
+  font-size: 13px;
+  font-weight: 750;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.footer-brand .brand-copy small {
+  color: #68738f;
+  font-size: 10px;
+  letter-spacing: 1.15px;
+}
+
+@media (max-width: 760px) {
+  .site-footer > p,
+  .footer-copyright,
+  .back-to-top {
+    font-size: 13px;
+  }
+
+  .footer-brand .brand-copy small {
+    font-size: 10px;
+  }
+}
