@@ -1,5 +1,6 @@
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { apiUrl, fetchItems, type ApiItem } from "./lib/api";
 import {
   ArrowDownRight,
   ArrowRight,
@@ -34,54 +35,61 @@ type CampusItem = {
   type: ItemType;
   image: string;
   icon: typeof Laptop;
+  description: string;
+  status: string;
 };
 
-const sampleItems: CampusItem[] = [
-  {
-    id: 1,
-    title: "MacBook Air",
-    category: "Electronics",
-    location: "Central Library",
-    date: "Today",
-    type: "Lost",
-    image:
-      "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=900&q=85",
-    icon: Laptop,
-  },
-  {
-    id: 2,
-    title: "Student backpack",
-    category: "Bags",
-    location: "North Campus",
-    date: "Yesterday",
-    type: "Found",
-    image:
-      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=85",
-    icon: BookOpen,
-  },
-  {
-    id: 3,
-    title: "Wireless headphones",
-    category: "Electronics",
-    location: "Student Centre",
-    date: "Today",
-    type: "Lost",
-    image:
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=85",
-    icon: Smartphone,
-  },
-  {
-    id: 4,
-    title: "Everyday essentials",
-    category: "Accessories",
-    location: "Main Cafeteria",
-    date: "Yesterday",
-    type: "Found",
-    image:
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=85",
-    icon: Wallet,
-  },
-];
+function formatItemDate(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Date unavailable";
+
+  const today = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
+
+  const sameDay = (a: Date, b: Date) =>
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate();
+
+  if (sameDay(date, today)) return "Today";
+  if (sameDay(date, yesterday)) return "Yesterday";
+  return date.toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    year: date.getFullYear() === today.getFullYear() ? undefined : "numeric",
+  });
+}
+
+function mapApiItem(item: ApiItem): CampusItem {
+  const category = item.category || "Other";
+  const normalizedCategory = category.toLowerCase();
+  const icon = normalizedCategory.includes("electronic")
+    ? Laptop
+    : normalizedCategory.includes("bag")
+      ? BookOpen
+      : normalizedCategory.includes("accessor")
+        ? Wallet
+        : normalizedCategory.includes("phone")
+          ? Smartphone
+          : BookOpen;
+
+  return {
+    id: item.id,
+    title: item.title,
+    category,
+    location: item.location,
+    date: formatItemDate(item.created_at),
+    type: item.item_type === "found" ? "Found" : "Lost",
+    image: item.image_path ? apiUrl(item.image_path) : "",
+    icon,
+    description: item.description,
+    status: item.status,
+  };
+}
+
+const fallbackImage =
+  "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=85";
 
 const filters = ["All items", "Lost", "Found"] as const;
 type Filter = (typeof filters)[number];
@@ -90,11 +98,35 @@ function App() {
   const [activeFilter, setActiveFilter] = useState<Filter>("All items");
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [items, setItems] = useState<CampusItem[]>([]);
+  const [isLoadingItems, setIsLoadingItems] = useState(true);
+  const [itemsError, setItemsError] = useState("");
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadItems() {
+      setIsLoadingItems(true);
+      setItemsError("");
+      try {
+        const apiItems = await fetchItems(controller.signal);
+        setItems(apiItems.map(mapApiItem));
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        setItemsError(error instanceof Error ? error.message : "Could not load campus reports.");
+      } finally {
+        if (!controller.signal.aborted) setIsLoadingItems(false);
+      }
+    }
+
+    void loadItems();
+    return () => controller.abort();
+  }, []);
 
   const visibleItems = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
 
-    return sampleItems.filter((item) => {
+    return items.filter((item) => {
       const matchesType =
         activeFilter === "All items" || item.type === activeFilter;
 
@@ -106,7 +138,7 @@ function App() {
 
       return matchesType && matchesSearch;
     });
-  }, [activeFilter, searchQuery]);
+  }, [items, activeFilter, searchQuery]);
 
   function scrollToReports() {
     document.getElementById("recent-reports")?.scrollIntoView({
@@ -353,19 +385,39 @@ function App() {
                 placeholder="Search items or locations..."
                 value={searchQuery}
                 onChange={(event) => setSearchQuery(event.target.value)}
-                aria-label="Search sample reports"
+                aria-label="Search campus reports"
               />
               <ChevronDown className="search-field-chevron" size={16} />
             </label>
           </div>
 
-          <div className="items-grid">
+          {isLoadingItems && (
+            <div className="reports-feedback" role="status">
+              <span className="loading-spinner" /> Loading campus reports…
+            </div>
+          )}
+
+          {!isLoadingItems && itemsError && (
+            <div className="reports-feedback reports-feedback-error" role="alert">
+              <h3>We couldn’t load campus reports</h3>
+              <p>{itemsError}</p>
+              <button className="button button-outline" type="button" onClick={() => window.location.reload()}>
+                Try again
+              </button>
+            </div>
+          )}
+
+          {!isLoadingItems && !itemsError && <div className="items-grid">
             {visibleItems.map((item) => {
               const ItemIcon = item.icon;
               return (
                 <article className="item-card" key={item.id}>
                   <div className="item-image-wrap">
-                    <img className="item-image" src={item.image} alt={item.title} loading="lazy" />
+                    {item.image ? (
+                      <img className="item-image" src={item.image} alt={item.title} loading="lazy" onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = fallbackImage; }} />
+                    ) : (
+                      <div className="item-image item-image-placeholder"><ItemIcon size={44} aria-hidden="true" /><span>No photo provided</span></div>
+                    )}
                     <span className={`item-type-badge ${item.type === "Lost" ? "badge-lost" : "badge-found"}`}>
                       <span className="badge-dot" />
                       {item.type} item
@@ -374,7 +426,7 @@ function App() {
                       className="item-quick-action"
                       type="button"
                       aria-label={`View ${item.title} details`}
-                      onClick={() => alert("Item details will be connected to the API in a later step.")}
+                      onClick={() => alert(`${item.title}\n\n${item.description}\n\nLocation: ${item.location}\nStatus: ${item.status}`)}
                     >
                       <ArrowUpRight size={18} />
                     </button>
@@ -397,13 +449,13 @@ function App() {
                 </article>
               );
             })}
-          </div>
+          </div>}
 
-          {visibleItems.length === 0 && (
+          {!isLoadingItems && !itemsError && visibleItems.length === 0 && (
             <div className="empty-state">
               <Search size={28} />
-              <h3>No matching sample reports</h3>
-              <p>Try another search term or choose a different filter.</p>
+              <h3>{items.length === 0 ? "No reports have been posted yet" : "No matching reports"}</h3>
+              <p>{items.length === 0 ? "When students post lost or found items, they will appear here." : "Try another search term or choose a different filter."}</p>
               <button
                 className="button button-outline"
                 type="button"
@@ -417,10 +469,12 @@ function App() {
             </div>
           )}
 
-          <div className="reports-note">
-            <Sparkles size={16} />
-            <span>These are sample cards for the design preview. Live campus reports will be connected next.</span>
-          </div>
+          {!isLoadingItems && !itemsError && items.length > 0 && (
+            <div className="reports-note">
+              <Sparkles size={16} />
+              <span>Showing live campus reports from the CampusLoop community.</span>
+            </div>
+          )}
         </section>
 
         <section className="how-section" id="how-it-works">
