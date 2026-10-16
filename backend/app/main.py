@@ -1,0 +1,73 @@
+from fastapi import FastAPI, HTTPException
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from sqlalchemy import create_engine, text
+from sqlalchemy.exc import SQLAlchemyError
+from app.database import Base, engine
+from app import models
+from fastapi.staticfiles import StaticFiles
+from app.routes.items import router as items_router, UPLOAD_DIR
+from app.routes.auth import router as auth_router
+from app.routes.claims import router as claims_router
+
+
+Base.metadata.create_all(bind=engine)   # creates any missing tables when the application starts
+
+class Settings(BaseSettings):
+    database_url: str
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        extra="ignore",
+    )
+
+
+settings = Settings()
+
+engine = create_engine(
+    settings.database_url,
+    pool_pre_ping=True,
+)
+
+app = FastAPI(
+    title="Campus Lost-and-Found API",
+    version="0.1.0",
+)
+
+app.include_router(items_router)
+app.include_router(auth_router)
+app.include_router(claims_router)
+
+app.mount(
+    "/uploads",
+    StaticFiles(directory=str(UPLOAD_DIR)),
+    name="uploads",
+)
+
+
+@app.get("/")
+def home():
+    return {"message": "Campus Lost-and-Found API is running!"}
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+
+@app.get("/db-check")
+def database_check():
+    try:
+        with engine.connect() as connection:
+            connection.execute(text("SELECT 1"))
+
+        return {
+            "status": "connected",
+            "database": "campus_lost_found",
+        }
+
+    except SQLAlchemyError:
+        raise HTTPException(
+            status_code=503,
+            detail="Database connection failed. Check your configuration.",
+        )
+

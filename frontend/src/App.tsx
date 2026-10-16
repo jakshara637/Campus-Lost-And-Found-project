@@ -1,0 +1,502 @@
+
+import { useMemo, useState } from "react";
+import {
+  ArrowDownRight,
+  ArrowRight,
+  ArrowUpRight,
+  Bell,
+  BookOpen,
+  Camera,
+  CheckCircle2,
+  ChevronDown,
+  Clock3,
+  Compass,
+  Laptop,
+  MapPin,
+  Menu,
+  Search,
+  ShieldCheck,
+  Smartphone,
+  Sparkles,
+  Wallet,
+  X,
+} from "lucide-react";
+import "./App.css";
+
+type ItemType = "Lost" | "Found";
+
+type CampusItem = {
+  id: number;
+  title: string;
+  category: string;
+  location: string;
+  date: string;
+  type: ItemType;
+  image: string;
+  icon: typeof Laptop;
+};
+
+const sampleItems: CampusItem[] = [
+  {
+    id: 1,
+    title: "MacBook Air",
+    category: "Electronics",
+    location: "Central Library",
+    date: "Today",
+    type: "Lost",
+    image:
+      "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=900&q=85",
+    icon: Laptop,
+  },
+  {
+    id: 2,
+    title: "Student backpack",
+    category: "Bags",
+    location: "North Campus",
+    date: "Yesterday",
+    type: "Found",
+    image:
+      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=85",
+    icon: BookOpen,
+  },
+  {
+    id: 3,
+    title: "Wireless headphones",
+    category: "Electronics",
+    location: "Student Centre",
+    date: "Today",
+    type: "Lost",
+    image:
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=85",
+    icon: Smartphone,
+  },
+  {
+    id: 4,
+    title: "Everyday essentials",
+    category: "Accessories",
+    location: "Main Cafeteria",
+    date: "Yesterday",
+    type: "Found",
+    image:
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=85",
+    icon: Wallet,
+  },
+];
+
+const filters = ["All items", "Lost", "Found"] as const;
+type Filter = (typeof filters)[number];
+
+function App() {
+  const [activeFilter, setActiveFilter] = useState<Filter>("All items");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const visibleItems = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+
+    return sampleItems.filter((item) => {
+      const matchesType =
+        activeFilter === "All items" || item.type === activeFilter;
+
+      const matchesSearch =
+        !query ||
+        [item.title, item.category, item.location].some((value) =>
+          value.toLowerCase().includes(query),
+        );
+
+      return matchesType && matchesSearch;
+    });
+  }, [activeFilter, searchQuery]);
+
+  function scrollToReports() {
+    document.getElementById("recent-reports")?.scrollIntoView({
+      behavior: "smooth",
+    });
+    setMobileMenuOpen(false);
+  }
+
+  function handleReportClick(type: ItemType) {
+    alert(
+      `The "${type}" report form will be connected to your account in a later step.`,
+    );
+  }
+
+  return (
+    <div className="site-shell">
+      <div className="announcement-bar">
+        <Sparkles size={14} aria-hidden="true" />
+        <span>A little kindness goes a long way on campus.</span>
+        <ArrowUpRight size={14} aria-hidden="true" />
+      </div>
+
+      <header className="site-header">
+        <a className="brand" href="#home" aria-label="CampusLoop home">
+          <span className="brand-mark">
+            <Compass size={23} strokeWidth={2.3} />
+          </span>
+          <span className="brand-copy">
+            <strong>campus<span>loop</span></strong>
+            <small>LOST & FOUND, RECONNECTED</small>
+          </span>
+        </a>
+
+        <button
+          className="mobile-menu-toggle"
+          type="button"
+          aria-label={mobileMenuOpen ? "Close navigation" : "Open navigation"}
+          aria-expanded={mobileMenuOpen}
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
+
+        <nav className={`main-nav ${mobileMenuOpen ? "nav-open" : ""}`}>
+          <a className="nav-link nav-link-active" href="#home" onClick={() => setMobileMenuOpen(false)}>
+            Home
+          </a>
+          <button className="nav-link" type="button" onClick={scrollToReports}>
+            Browse items
+          </button>
+          <a className="nav-link" href="#how-it-works" onClick={() => setMobileMenuOpen(false)}>
+            How it works
+          </a>
+          <a className="nav-link" href="#community" onClick={() => setMobileMenuOpen(false)}>
+            Our community
+          </a>
+          <div className="mobile-nav-actions">
+            <button className="button button-outline" type="button" onClick={() => alert("Login will be connected in the authentication step.")}>
+              Log in
+            </button>
+            <button className="button button-primary" type="button" onClick={() => alert("Registration will be connected in the authentication step.")}>
+              Get started <ArrowRight size={16} />
+            </button>
+          </div>
+        </nav>
+
+        <div className="header-actions">
+          <button
+            className="button button-quiet"
+            type="button"
+            onClick={() => alert("Login will be connected in the authentication step.")}
+          >
+            Log in
+          </button>
+          <button
+            className="button button-primary header-cta"
+            type="button"
+            onClick={() => alert("Registration will be connected in the authentication step.")}
+          >
+            Get started <ArrowUpRight size={16} />
+          </button>
+        </div>
+      </header>
+
+      <main>
+        <section className="hero-section" id="home">
+          <div className="hero-copy">
+            <div className="eyebrow">
+              <span className="eyebrow-dot" />
+              YOUR CAMPUS. YOUR COMMUNITY.
+            </div>
+
+            <h1>
+              Lost something?
+              <br />
+              <span>Let’s bring it</span>
+              <br />
+              back together.
+            </h1>
+
+            <p className="hero-description">
+              From misplaced essentials to unexpected discoveries, help good
+              things find their way back to the people who need them.
+            </p>
+
+            <div className="hero-actions">
+              <button
+                className="button button-primary button-large"
+                type="button"
+                onClick={() => handleReportClick("Lost")}
+              >
+                <Search size={18} />
+                I lost something
+                <ArrowUpRight size={17} />
+              </button>
+              <button
+                className="button button-outline button-large"
+                type="button"
+                onClick={() => handleReportClick("Found")}
+              >
+                <Camera size={18} />
+                I found something
+              </button>
+            </div>
+
+            <div className="hero-trust">
+              <div className="avatar-stack" aria-hidden="true">
+                <span className="avatar avatar-one">A</span>
+                <span className="avatar avatar-two">R</span>
+                <span className="avatar avatar-three">S</span>
+                <span className="avatar avatar-four">+</span>
+              </div>
+              <div>
+                <strong>Good people. Good finds.</strong>
+                <span>A campus community that cares.</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="hero-visual">
+            <div className="hero-visual-glow" />
+            <div className="visual-label visual-label-top">
+              <span className="live-dot" />
+              SMALL ACTS, BIG IMPACT
+            </div>
+
+            <div className="hero-image-frame">
+              <img
+                src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=90"
+                alt="University students spending time together on campus"
+              />
+              <div className="hero-image-overlay" />
+              <div className="hero-image-caption">
+                <span className="caption-icon">
+                  <CheckCircle2 size={20} />
+                </span>
+                <div>
+                  <strong>It starts with us.</strong>
+                  <span>Making campus feel a little closer.</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="floating-card floating-card-top">
+              <span className="floating-icon floating-icon-violet">
+                <ShieldCheck size={19} />
+              </span>
+              <div>
+                <strong>Community first</strong>
+                <span>Every item matters</span>
+              </div>
+            </div>
+
+            <div className="floating-card floating-card-bottom">
+              <span className="floating-icon floating-icon-green">
+                <CheckCircle2 size={19} />
+              </span>
+              <div>
+                <strong>One less worry</strong>
+                <span>One more reason to smile</span>
+              </div>
+            </div>
+
+            <div className="visual-sparkle sparkle-one"><Sparkles size={19} /></div>
+            <div className="visual-sparkle sparkle-two"><ArrowDownRight size={21} /></div>
+          </div>
+        </section>
+
+        <section className="benefits-strip" aria-label="Portal benefits">
+          <div className="benefit">
+            <span className="benefit-icon"><Search size={19} /></span>
+            <div>
+              <strong>Find what matters</strong>
+              <span>Search campus reports</span>
+            </div>
+          </div>
+          <div className="benefit">
+            <span className="benefit-icon"><ShieldCheck size={19} /></span>
+            <div>
+              <strong>Claim with confidence</strong>
+              <span>Clear, trackable requests</span>
+            </div>
+          </div>
+          <div className="benefit">
+            <span className="benefit-icon"><Bell size={19} /></span>
+            <div>
+              <strong>Stay in the loop</strong>
+              <span>Email updates when enabled</span>
+            </div>
+          </div>
+        </section>
+
+        <section className="reports-section section-container" id="recent-reports">
+          <div className="section-heading">
+            <div>
+              <div className="eyebrow">A SECOND CHANCE TO BE FOUND</div>
+              <h2>Recently on campus<span>.</span></h2>
+              <p>Take a look around. Your missing item might be right here.</p>
+            </div>
+            <button className="text-link" type="button" onClick={() => alert("The full browse page will be built in a later step.")}>
+              Explore all reports <ArrowRight size={17} />
+            </button>
+          </div>
+
+          <div className="report-toolbar">
+            <div className="filter-tabs" role="group" aria-label="Filter reports">
+              {filters.map((filter) => (
+                <button
+                  key={filter}
+                  className={`filter-tab ${activeFilter === filter ? "filter-tab-active" : ""}`}
+                  type="button"
+                  aria-pressed={activeFilter === filter}
+                  onClick={() => setActiveFilter(filter)}
+                >
+                  {filter}
+                </button>
+              ))}
+            </div>
+
+            <label className="search-field">
+              <Search size={18} />
+              <input
+                type="search"
+                placeholder="Search items or locations..."
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                aria-label="Search sample reports"
+              />
+              <ChevronDown className="search-field-chevron" size={16} />
+            </label>
+          </div>
+
+          <div className="items-grid">
+            {visibleItems.map((item) => {
+              const ItemIcon = item.icon;
+              return (
+                <article className="item-card" key={item.id}>
+                  <div className="item-image-wrap">
+                    <img className="item-image" src={item.image} alt={item.title} loading="lazy" />
+                    <span className={`item-type-badge ${item.type === "Lost" ? "badge-lost" : "badge-found"}`}>
+                      <span className="badge-dot" />
+                      {item.type} item
+                    </span>
+                    <button
+                      className="item-quick-action"
+                      type="button"
+                      aria-label={`View ${item.title} details`}
+                      onClick={() => alert("Item details will be connected to the API in a later step.")}
+                    >
+                      <ArrowUpRight size={18} />
+                    </button>
+                  </div>
+                  <div className="item-card-content">
+                    <div className="item-category">
+                      <ItemIcon size={14} />
+                      {item.category}
+                    </div>
+                    <h3>{item.title}</h3>
+                    <div className="item-meta">
+                      <span><MapPin size={14} /> {item.location}</span>
+                      <span><Clock3 size={14} /> {item.date}</span>
+                    </div>
+                    <div className="item-card-footer">
+                      <span className="report-id">REPORT #{String(item.id).padStart(4, "0")}</span>
+                      <span className="view-details">View details <ArrowRight size={14} /></span>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+
+          {visibleItems.length === 0 && (
+            <div className="empty-state">
+              <Search size={28} />
+              <h3>No matching sample reports</h3>
+              <p>Try another search term or choose a different filter.</p>
+              <button
+                className="button button-outline"
+                type="button"
+                onClick={() => {
+                  setSearchQuery("");
+                  setActiveFilter("All items");
+                }}
+              >
+                Clear filters
+              </button>
+            </div>
+          )}
+
+          <div className="reports-note">
+            <Sparkles size={16} />
+            <span>These are sample cards for the design preview. Live campus reports will be connected next.</span>
+          </div>
+        </section>
+
+        <section className="how-section" id="how-it-works">
+          <div className="section-container">
+            <div className="how-heading">
+              <div className="eyebrow">THREE SIMPLE STEPS</div>
+              <h2>A little effort.<br /><span>A big difference.</span></h2>
+              <p>Getting your belongings back shouldn't be complicated.</p>
+            </div>
+
+            <div className="steps-grid">
+              <article className="step-card">
+                <span className="step-number">01</span>
+                <span className="step-icon"><Camera size={24} /></span>
+                <h3>Share the details</h3>
+                <p>Post a lost or found report with a photo, description and campus location.</p>
+                <span className="step-decoration">REPORT</span>
+              </article>
+              <article className="step-card step-card-featured">
+                <span className="step-number">02</span>
+                <span className="step-icon"><Search size={24} /></span>
+                <h3>Find a match</h3>
+                <p>Browse reports and use search filters to narrow down what you're looking for.</p>
+                <span className="step-decoration">DISCOVER</span>
+              </article>
+              <article className="step-card">
+                <span className="step-number">03</span>
+                <span className="step-icon"><CheckCircle2 size={24} /></span>
+                <h3>Reconnect</h3>
+                <p>Submit a claim, follow its status and let the right item find its way home.</p>
+                <span className="step-decoration">RECONNECT</span>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section className="community-section section-container" id="community">
+          <div className="community-card">
+            <div className="community-copy">
+              <div className="eyebrow eyebrow-light"><Sparkles size={14} /> MORE THAN LOST & FOUND</div>
+              <h2>Good things happen<br />when we <span>look out for each other.</span></h2>
+              <p>One report, one thoughtful gesture, one less thing to worry about. It all adds up to a better campus community.</p>
+              <button className="button button-light" type="button" onClick={() => handleReportClick("Found")}>
+                Be someone's good day <ArrowRight size={17} />
+              </button>
+            </div>
+            <div className="community-art" aria-hidden="true">
+              <div className="community-orbit orbit-one" />
+              <div className="community-orbit orbit-two" />
+              <div className="community-center"><Compass size={54} strokeWidth={1.4} /></div>
+              <span className="community-bubble bubble-one"><CheckCircle2 size={22} /></span>
+              <span className="community-bubble bubble-two"><HeartIcon /></span>
+              <span className="community-bubble bubble-three"><MapPin size={22} /></span>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer className="site-footer">
+        <a className="brand footer-brand" href="#home">
+          <span className="brand-mark"><Compass size={22} /></span>
+          <span className="brand-copy">
+            <strong>campus<span>loop</span></strong>
+            <small>LOST & FOUND, RECONNECTED</small>
+          </span>
+        </a>
+        <p>Made for campus. Built around community.</p>
+        <a href="#home" className="back-to-top">Back to top ↑</a>
+        <span className="footer-copyright">© {new Date().getFullYear()} CampusLoop</span>
+      </footer>
+    </div>
+  );
+}
+
+function HeartIcon() {
+  return <Sparkles size={22} />;
+}
+
+export default App;
