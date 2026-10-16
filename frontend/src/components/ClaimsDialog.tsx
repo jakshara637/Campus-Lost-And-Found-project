@@ -47,6 +47,7 @@ export default function ClaimsDialog({
   const [loading, setLoading] = useState(mode !== "claim");
   const [busyId, setBusyId] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     if (mode === "claim") return;
@@ -56,16 +57,15 @@ export default function ClaimsDialog({
       setLoading(true);
       setError("");
       try {
-        const result = mode === "mine"
-          ? await Promise.all([fetchMyClaims(), fetchItems()])
-          : await fetchItemClaims(itemId as number);
-        if (!active) return;
-        if (mode === "mine" && Array.isArray(result)) {
-          const [myClaims, allItems] = result as [ApiClaim[], ApiItem[]];
+        if (mode === "mine") {
+          const [myClaims, allItems] = await Promise.all([fetchMyClaims(), fetchItems()]);
+          if (!active) return;
           setClaims(myClaims);
           setItems(allItems);
         } else {
-          setClaims(result as ApiClaim[]);
+          const itemClaims = await fetchItemClaims(itemId as number);
+          if (!active) return;
+          setClaims(itemClaims);
         }
       } catch (loadError) {
         if (active) setError(loadError instanceof Error ? loadError.message : "Could not load claims.");
@@ -87,6 +87,7 @@ export default function ClaimsDialog({
     try {
       await submitClaim(itemId, message.trim());
       setNotice("Your claim has been submitted. The report owner has been notified.");
+      setSubmitted(true);
       onSuccess();
     } catch (submitError) {
       setError(submitError instanceof Error ? submitError.message : "Could not submit your claim.");
@@ -147,8 +148,8 @@ export default function ClaimsDialog({
             <label htmlFor="claim-message">Why do you believe this item is yours?</label>
             <textarea id="claim-message" required minLength={10} maxLength={1000} rows={5} value={message} onChange={(event) => setMessage(event.target.value)} placeholder="Describe identifying details that only the owner is likely to know…" />
             <div className="claims-dialog-character-count">{message.length}/1000 characters</div>
-            <button className="button button-primary claims-dialog-submit" type="submit" disabled={submitting}>
-              {submitting ? "Submitting…" : "Submit claim"}
+            <button className="button button-primary claims-dialog-submit" type="submit" disabled={submitting || submitted}>
+              {submitting ? "Submitting…" : submitted ? "Claim submitted" : "Submit claim"}
             </button>
           </form>
         )}
