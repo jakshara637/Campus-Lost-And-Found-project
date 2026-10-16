@@ -46,6 +46,8 @@ type CampusItem = {
   description: string;
   status: string;
   postedBy: number;
+  posterName: string;
+  posterEmail: string;
 };
 
 function formatItemDate(value: string): string {
@@ -95,6 +97,8 @@ function mapApiItem(item: ApiItem): CampusItem {
     description: item.description,
     status: item.status,
     postedBy: item.posted_by,
+    posterName: item.posted_by_name || "Unknown poster",
+    posterEmail: item.posted_by_email || "Not provided",
   };
 }
 
@@ -224,6 +228,12 @@ function App() {
   function handleReportClick(type: ItemType) {
     setReportType(type);
     setDialogMode("report");
+  }
+
+  function handleViewItemDetails(item: CampusItem) {
+    window.alert(
+      `${item.title}\n\n${item.description}\n\nPosted by: ${item.posterName}\nEmail: ${item.posterEmail}\n\nCategory: ${item.category}\nLocation: ${item.location}\nDate: ${item.date}\nStatus: ${item.status}`,
+    );
   }
 
   function handleDialogSuccess() {
@@ -598,7 +608,7 @@ function App() {
                       className="item-quick-action"
                       type="button"
                       aria-label={`View ${item.title} details`}
-                      onClick={() => alert(`${item.title}\n\n${item.description}\n\nLocation: ${item.location}\nStatus: ${item.status}`)}
+                      onClick={() => handleViewItemDetails(item)}
                     >
                       <ArrowUpRight size={18} />
                     </button>
@@ -615,7 +625,7 @@ function App() {
                     </div>
                     <div className="item-card-footer">
                       <span className="report-id">REPORT #{String(item.id).padStart(4, "0")}</span>
-                      <span className="view-details">View details <ArrowRight size={14} /></span>
+                      <button className="view-details" type="button" onClick={() => handleViewItemDetails(item)}>View details <ArrowRight size={14} /></button>
                     </div>
                     <div className="item-claim-actions">
                       {item.type === "Found" && item.status === "open" && item.postedBy !== currentUser?.id && (
