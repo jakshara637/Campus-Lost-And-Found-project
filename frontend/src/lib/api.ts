@@ -200,3 +200,13 @@ export async function reviewClaim(
   });
   return (await response.json()) as ApiClaim;
 }
+
+
+export async function fetchMyReports(): Promise<ApiItem[]> {
+  const response = await authenticatedFetch("/items/mine");
+  return (await response.json()) as ApiItem[];
+}
+
+export async function deleteItem(itemId: number): Promise<void> {
+  await authenticatedFetch(`/items/${itemId}`, { method: "DELETE" });
+}
