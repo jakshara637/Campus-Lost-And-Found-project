@@ -22,7 +22,7 @@ class User(Base):
     )
     is_verified: Mapped[bool] = mapped_column(
         Boolean,
-        default=True,
+        default=False,
         nullable=False,
     )
     email_new_post_alerts: Mapped[bool] = mapped_column(
