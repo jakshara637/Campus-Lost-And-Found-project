@@ -189,8 +189,6 @@ function App() {
   }
 
   function handleClaimsSuccess() {
-    setClaimsDialogMode(null);
-    setSelectedClaimItem(null);
     setRefreshKey((current) => current + 1);
   }
 
