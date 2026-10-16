@@ -137,3 +137,66 @@ export async function createItem(input: {
   await ensureSuccess(response);
   return (await response.json()) as ApiItem;
 }
+
+
+export type ApiUser = {
+  id: number;
+  full_name: string;
+  email: string;
+  role: string;
+};
+
+export type ApiClaim = {
+  id: number;
+  item_id: number;
+  claimant_id: number;
+  message: string;
+  status: "pending" | "approved" | "rejected" | string;
+  created_at: string;
+};
+
+async function authenticatedFetch(path: string, init: RequestInit = {}): Promise<Response> {
+  const token = getAccessToken();
+  if (!token) throw new Error("Please log in to continue.");
+  const headers = new Headers(init.headers);
+  headers.set("Authorization", `Bearer ${token}`);
+  const response = await fetch(apiUrl(path), { ...init, headers });
+  await ensureSuccess(response);
+  return response;
+}
+
+export async function fetchCurrentUser(): Promise<ApiUser> {
+  const response = await authenticatedFetch("/auth/me");
+  return (await response.json()) as ApiUser;
+}
+
+export async function submitClaim(itemId: number, message: string): Promise<ApiClaim> {
+  const response = await authenticatedFetch(`/items/${itemId}/claims`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message }),
+  });
+  return (await response.json()) as ApiClaim;
+}
+
+export async function fetchMyClaims(): Promise<ApiClaim[]> {
+  const response = await authenticatedFetch("/claims/mine");
+  return (await response.json()) as ApiClaim[];
+}
+
+export async function fetchItemClaims(itemId: number): Promise<ApiClaim[]> {
+  const response = await authenticatedFetch(`/items/${itemId}/claims`);
+  return (await response.json()) as ApiClaim[];
+}
+
+export async function reviewClaim(
+  claimId: number,
+  status: "approved" | "rejected",
+): Promise<ApiClaim> {
+  const response = await authenticatedFetch(`/claims/${claimId}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status }),
+  });
+  return (await response.json()) as ApiClaim;
+}
