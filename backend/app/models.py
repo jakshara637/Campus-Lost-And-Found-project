@@ -27,7 +27,7 @@ class User(Base):
     )
     email_new_post_alerts: Mapped[bool] = mapped_column(
         Boolean,
-        default=False,
+        default=True,
         nullable=False,
     )
 
