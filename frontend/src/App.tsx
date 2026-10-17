@@ -149,6 +149,19 @@ function App() {
     return () => controller.abort();
   }, [refreshKey]);
 
+  // Keep report statuses fresh across different students' browser sessions.
+  // Without this refresh, the owner can miss the "Review responses" action
+  // after another student submits a claim.
+  useEffect(() => {
+    const refreshReports = () => setRefreshKey((current) => current + 1);
+    const intervalId = window.setInterval(refreshReports, 10000);
+    window.addEventListener("focus", refreshReports);
+    return () => {
+      window.clearInterval(intervalId);
+      window.removeEventListener("focus", refreshReports);
+    };
+  }, []);
+
   useEffect(() => {
     const hash = window.location.hash;
     if (!hash) return;
