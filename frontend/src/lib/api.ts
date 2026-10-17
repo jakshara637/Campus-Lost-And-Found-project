@@ -20,6 +20,8 @@ export type ApiItem = {
 type ApiErrorBody = { detail?: string | { msg?: string }[]; message?: string };
 
 export function apiUrl(path: string): string {
+  // Keep absolute image URLs intact; only prefix relative API paths.
+  if (/^https?:\/\//i.test(path)) return path;
   return `${API_BASE_URL}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
