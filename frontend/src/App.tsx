@@ -628,17 +628,17 @@ function App() {
                       <button className="view-details" type="button" onClick={() => handleViewItemDetails(item)}>View details <ArrowRight size={14} /></button>
                     </div>
                     <div className="item-claim-actions">
-                      {item.type === "Found" && item.status === "open" && item.postedBy !== currentUser?.id && (
+                      {item.status === "open" && item.postedBy !== currentUser?.id && (
                         <button className="item-claim-button" type="button" onClick={() => {
                           if (!getAccessToken()) { setDialogMode("login"); return; }
                           openClaimDialog("claim", item);
                         }}>
-                          Claim this item
+                          {item.type === "Lost" ? "I found this item" : "Claim this item"}
                         </button>
                       )}
-                      {currentUser && item.postedBy === currentUser.id && item.type === "Found" && item.status === "claim_requested" && (
+                      {currentUser && item.postedBy === currentUser.id && item.status === "claim_requested" && (
                         <button className="item-review-button" type="button" onClick={() => openClaimDialog("review", item)}>
-                          Review claims
+                          Review responses
                         </button>
                       )}
                     </div>
@@ -761,6 +761,7 @@ function App() {
           mode={claimsDialogMode}
           itemId={selectedClaimItem?.id}
           itemTitle={selectedClaimItem?.title}
+          itemType={selectedClaimItem?.type === "Lost" ? "lost" : "found"}
           onClose={() => { setClaimsDialogMode(null); setSelectedClaimItem(null); }}
           onSuccess={handleClaimsSuccess}
         />
