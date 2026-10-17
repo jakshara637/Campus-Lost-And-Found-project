@@ -4,7 +4,7 @@
 
 CampusLoop is a full-stack campus lost-and-found portal where students can publish lost or found item reports, search campus listings, submit and review claims, and receive email updates. It combines a responsive React interface with a FastAPI backend and PostgreSQL database.
 
-> **Project status:** Core application features and Google OAuth integration have been developed. Production deployment and production-environment configuration are the next major steps.
+> **Project status:** Deployed on Render. The live backend, PostgreSQL database, Google OAuth, email OTP verification, and email notifications have been tested successfully.
 
 ## Contents
 
@@ -14,6 +14,7 @@ CampusLoop is a full-stack campus lost-and-found portal where students can publi
 - [Architecture](#architecture)
 - [Run locally](#run-locally)
 - [Environment configuration](#environment-configuration)
+- [Deployment](#deployment)
 - [Google OAuth setup](#google-oauth-setup)
 - [API overview](#api-overview)
 - [Validation and build](#validation-and-build)
@@ -59,7 +60,7 @@ The project was built as a practical full-stack application, with authentication
 | Backend | Python, FastAPI, Pydantic |
 | Database | PostgreSQL, SQLAlchemy |
 | Authentication | JWT-based API authentication, email OTP, Google OAuth |
-| Email | SMTP-based email delivery |
+| Email | Nylas Transactional Send API over HTTPS |
 | API / development | Uvicorn, Git, GitHub |
 
 ## Architecture
@@ -166,12 +167,13 @@ DATABASE_URL=postgresql+psycopg://DB_USER:DB_PASSWORD@localhost:5432/campus_lost
 JWT_SECRET_KEY=replace_with_a_long_random_secret
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 
-# Email OTP and notification delivery
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_USERNAME=your_smtp_username
-SMTP_PASSWORD=your_smtp_password
-SMTP_FROM_EMAIL=your_verified_sender@example.com
+# Email OTP and notification delivery (Nylas HTTPS API)
+NYLAS_API_KEY=your_nylas_api_key
+NYLAS_DOMAIN=your-verified-domain.nylas.email
+NYLAS_FROM_EMAIL=notifications@your-verified-domain.nylas.email
+NYLAS_FROM_NAME=CampusLoop
+# Optional; default is the Nylas US API endpoint
+# NYLAS_API_URL=https://api.us.nylas.com
 
 # Google OAuth (optional until configured)
 GOOGLE_CLIENT_ID=your_google_oauth_client_id
@@ -180,7 +182,7 @@ GOOGLE_REDIRECT_URI=http://localhost:8000/auth/google/callback
 SESSION_SECRET_KEY=replace_with_another_long_random_secret
 ```
 
-**Important:** The setting names above reflect the backend's configuration fields. For email, use SMTP details from a provider that permits application email sending; provider-specific authentication requirements may apply. Use URL-encoded database credentials if they contain reserved characters. Generate strong, unique secrets and never publish real credentials.
+**Important:** Use the exact domain that Nylas shows as verified, and a sender address permitted for that domain. `NYLAS_API_KEY` is secret and must only be stored in the backend environment—not in frontend variables or GitHub. Render's free web services block standard outbound SMTP ports, so the backend uses Nylas over HTTPS. Use URL-encoded database credentials if they contain reserved characters. Generate strong, unique secrets and never publish real credentials.
 
 ## Google OAuth setup
 
@@ -191,7 +193,13 @@ SESSION_SECRET_KEY=replace_with_another_long_random_secret
 5. Set `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `GOOGLE_REDIRECT_URI` in `backend/.env`.
 6. Restart the backend and test both Google sign-in and registration flows.
 
-For deployment, replace the localhost callback with the exact HTTPS callback URL for the deployed API and update the Google OAuth client configuration accordingly.
+For the deployed backend, the callback URL is `https://campus-lost-and-found-project.onrender.com/auth/google/callback`. Add that exact URL to the authorized redirect URIs in your Google OAuth client and set `GOOGLE_REDIRECT_URI` to the same value in Render. Keep the localhost callback for local development.
+
+## Deployment
+
+The backend is deployed on Render and uses a hosted PostgreSQL database. The public API base URL is [`https://campus-lost-and-found-project.onrender.com`](https://campus-lost-and-found-project.onrender.com). You can inspect the API through its [Swagger documentation](https://campus-lost-and-found-project.onrender.com/docs) and check the [health endpoint](https://campus-lost-and-found-project.onrender.com/health).
+
+The React frontend is deployed separately as a Render Static Site. Set the frontend environment variable `VITE_API_BASE_URL` to `https://campus-lost-and-found-project.onrender.com` and ensure the backend's `FRONTEND_ORIGIN` matches the exact deployed frontend origin. Configure all backend secrets and Nylas settings in Render's Environment section; never commit production secrets to the repository. Free services may sleep when idle, so the first request after inactivity can take longer.
 
 ## API overview
 
@@ -238,7 +246,9 @@ For backend development, run the API with Uvicorn and use the interactive API do
 - [x] Google OAuth integration
 - [x] Claims workflow and email notifications
 - [x] Analytics dashboard
-- [ ] Production deployment and environment hardening
+- [x] Production deployment on Render with hosted PostgreSQL
+- [x] Production email delivery through Nylas HTTPS API
+- [ ] Ongoing production hardening, monitoring, and rate-limit review
 - [ ] AI-assisted matching of similar lost and found reports
 
 ## Contributing
