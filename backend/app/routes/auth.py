@@ -127,6 +127,7 @@ async def register_user(
     try:
         await send_otp_email(email, otp)
     except Exception:
+        logging.exception("OTP email delivery failed during registration")
         # The pending account and OTP remain saved.
         # The user can request a new code using /resend-otp.
         raise HTTPException(
