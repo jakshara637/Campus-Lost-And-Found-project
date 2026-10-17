@@ -403,6 +403,7 @@ async def google_callback(
                     secrets.token_urlsafe(48)
                 ),
                 is_verified=True,
+                email_new_post_alerts=True,
             )
             db.add(user)
             db.commit()
