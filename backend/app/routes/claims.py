@@ -40,10 +40,12 @@ async def create_claim(
             detail="Item not found.",
         )
 
-    if item.item_type != "found":
+    # A found-item report can be claimed by its owner, and a lost-item
+    # report can be answered by someone who found the missing item.
+    if item.item_type not in {"lost", "found"}:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Claims can only be submitted for found items.",
+            detail="This report type does not support claims.",
         )
 
     if item.posted_by == current_user.id:
