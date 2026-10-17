@@ -17,6 +17,7 @@ type ClaimsDialogProps = {
   mode: ClaimsDialogMode;
   itemId?: number;
   itemTitle?: string;
+  itemType?: "lost" | "found";
   onClose: () => void;
   onSuccess: () => void;
 };
@@ -36,6 +37,7 @@ export default function ClaimsDialog({
   mode,
   itemId,
   itemTitle = "this item",
+  itemType = "found",
   onClose,
   onSuccess,
 }: ClaimsDialogProps) {
@@ -120,14 +122,17 @@ export default function ClaimsDialog({
     }
   }
 
-  const title = mode === "claim" ? "Submit a claim"
+  const title = mode === "claim"
+    ? itemType === "lost" ? "Respond to lost-item report" : "Submit a claim"
     : mode === "mine" ? "My claims"
       : "Review claims";
   const subtitle = mode === "claim"
-    ? `Tell the report owner why “${itemTitle}” belongs to you. Do not include sensitive personal information.`
+    ? itemType === "lost"
+      ? `Tell the report owner how you found “${itemTitle}”. Share useful identifying details, but do not include sensitive personal information.`
+      : `Tell the report owner why “${itemTitle}” belongs to you. Do not include sensitive personal information.`
     : mode === "mine"
-      ? "Track the decisions on claims you have submitted."
-      : `Review claim requests for “${itemTitle}”.`;
+      ? "Track the decisions on claims and responses you have submitted."
+      : `Review responses for “${itemTitle}”.`;
 
   return (
     <div className="claims-dialog-backdrop" role="presentation" onMouseDown={(event) => {
@@ -145,11 +150,11 @@ export default function ClaimsDialog({
 
         {mode === "claim" && (
           <form className="claims-dialog-form" onSubmit={handleSubmit}>
-            <label htmlFor="claim-message">Why do you believe this item is yours?</label>
-            <textarea id="claim-message" required minLength={10} maxLength={1000} rows={5} value={message} onChange={(event) => setMessage(event.target.value)} placeholder="Describe identifying details that only the owner is likely to know…" />
+            <label htmlFor="claim-message">{itemType === "lost" ? "Where and how did you find this item?" : "Why do you believe this item is yours?"}</label>
+            <textarea id="claim-message" required minLength={10} maxLength={1000} rows={5} value={message} onChange={(event) => setMessage(event.target.value)} placeholder={itemType === "lost" ? "Describe where you found it and any details that help identify it…" : "Describe identifying details that only the owner is likely to know…"} />
             <div className="claims-dialog-character-count">{message.length}/1000 characters</div>
             <button className="button button-primary claims-dialog-submit" type="submit" disabled={submitting || submitted}>
-              {submitting ? "Submitting…" : submitted ? "Claim submitted" : "Submit claim"}
+              {submitting ? "Submitting…" : submitted ? (itemType === "lost" ? "Response sent" : "Claim submitted") : (itemType === "lost" ? "Send response" : "Submit claim")}
             </button>
           </form>
         )}
