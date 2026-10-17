@@ -102,9 +102,6 @@ function mapApiItem(item: ApiItem): CampusItem {
   };
 }
 
-const fallbackImage =
-  "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=85";
-
 const filters = ["All items", "Lost", "Found"] as const;
 type Filter = (typeof filters)[number];
 
