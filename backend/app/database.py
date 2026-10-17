@@ -9,6 +9,11 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 30
     resend_api_key: str | None = None
     resend_from_email: str | None = None
+    nylas_api_key: str | None = None
+    nylas_domain: str | None = None
+    nylas_from_email: str | None = None
+    nylas_from_name: str = "CampusLoop"
+    nylas_api_url: str = "https://api.us.nylas.com"
     google_client_id: str | None = None
     google_client_secret: str | None = None
     google_redirect_uri: str = "http://localhost:8000/auth/google/callback"
@@ -51,5 +56,3 @@ class Base(DeclarativeBase):
 def get_db():
     with Session(engine) as db:
         yield db
-
-        
