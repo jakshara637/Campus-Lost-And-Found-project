@@ -1,7 +1,5 @@
 import logging
-from email.message import EmailMessage
-
-import aiosmtplib
+import httpx
 
 from app.database import settings
 
@@ -13,29 +11,30 @@ async def send_email(
     subject: str,
     body: str,
 ) -> None:
-    if not all([
-        settings.smtp_host,
-        settings.smtp_username,
-        settings.smtp_password,
-        settings.smtp_from_email,
-    ]):
-        raise RuntimeError("Email SMTP settings are incomplete.")
+    """Send an email through Resend's HTTPS API (works on Render free web services)."""
+    if not settings.resend_api_key or not settings.resend_from_email:
+        raise RuntimeError(
+            "Resend settings are incomplete. Configure RESEND_API_KEY and RESEND_FROM_EMAIL."
+        )
 
-    message = EmailMessage()
-    message["Subject"] = subject
-    message["From"] = settings.smtp_from_email
-    message["To"] = to_email
-    message.set_content(body)
+    headers = {
+        "Authorization": f"Bearer {settings.resend_api_key}",
+        "Content-Type": "application/json",
+    }
+    payload = {
+        "from": settings.resend_from_email,
+        "to": [to_email],
+        "subject": subject,
+        "text": body,
+    }
 
-    await aiosmtplib.send(
-        message,
-        hostname=settings.smtp_host,
-        port=settings.smtp_port,
-        username=settings.smtp_username,
-        password=settings.smtp_password,
-        start_tls=True,
-        timeout=15,
-    )
+    async with httpx.AsyncClient(timeout=15.0) as client:
+        response = await client.post(
+            "https://api.resend.com/emails",
+            headers=headers,
+            json=payload,
+        )
+        response.raise_for_status()
 
 
 async def send_otp_email(to_email: str, otp: str) -> None:
