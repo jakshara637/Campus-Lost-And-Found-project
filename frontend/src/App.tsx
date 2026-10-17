@@ -126,6 +126,7 @@ function App() {
   const [myReportsOpen, setMyReportsOpen] = useState(false);
   const [analyticsOpen, setAnalyticsOpen] = useState(false);
   const [selectedClaimItem, setSelectedClaimItem] = useState<CampusItem | null>(null);
+  const [detailsItem, setDetailsItem] = useState<CampusItem | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -231,9 +232,7 @@ function App() {
   }
 
   function handleViewItemDetails(item: CampusItem) {
-    window.alert(
-      `${item.title}\n\n${item.description}\n\nPosted by: ${item.posterName}\nEmail: ${item.posterEmail}\n\nCategory: ${item.category}\nLocation: ${item.location}\nDate: ${item.date}\nStatus: ${item.status}`,
-    );
+    setDetailsItem(item);
   }
 
   function handleDialogSuccess() {
@@ -596,7 +595,11 @@ function App() {
                 <article className="item-card" key={item.id}>
                   <div className="item-image-wrap">
                     {item.image ? (
-                      <img className="item-image" src={item.image} alt={item.title} loading="lazy" onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = fallbackImage; }} />
+                      <img className="item-image" src={item.image} alt={item.title} loading="lazy"
+                        onError={(event) => {
+                          event.currentTarget.style.display = "none";
+                          event.currentTarget.parentElement?.classList.add("item-image-failed");
+                        }} />
                     ) : (
                       <div className="item-image item-image-placeholder"><ItemIcon size={44} aria-hidden="true" /><span>No photo provided</span></div>
                     )}
@@ -668,7 +671,7 @@ function App() {
 
           {!isLoadingItems && !itemsError && items.length > 0 && (
             <div className="reports-note">
-              <Sparkles size={16} />
+              <Sparkles size={20} />
               <span>Showing live campus reports from the CampusLoop community.</span>
             </div>
           )}
@@ -742,6 +745,52 @@ function App() {
         <a href="#home" className="back-to-top">Back to top ↑</a>
         <span className="footer-copyright">© {new Date().getFullYear()} CampusLoop</span>
       </footer>
+
+
+      {detailsItem && (
+        <div className="item-details-backdrop" role="presentation" onMouseDown={(event) => {
+          if (event.target === event.currentTarget) setDetailsItem(null);
+        }}>
+          <section className="item-details-modal" role="dialog" aria-modal="true" aria-labelledby="item-details-title">
+            <button className="item-details-close" type="button" aria-label="Close report details" onClick={() => setDetailsItem(null)}><X size={21} /></button>
+            <div className="item-details-hero">
+              {detailsItem.image ? (
+                <img src={detailsItem.image} alt={detailsItem.title} onError={(event) => {
+                  event.currentTarget.style.display = "none";
+                  event.currentTarget.parentElement?.classList.add("item-details-image-failed");
+                }} />
+              ) : (
+                <div className="item-details-image-placeholder"><detailsItem.icon size={54} /><span>No photo provided</span></div>
+              )}
+              <span className={`item-details-type ${detailsItem.type === "Lost" ? "badge-lost" : "badge-found"}`}><span className="badge-dot" /> {detailsItem.type} item</span>
+            </div>
+            <div className="item-details-body">
+              <div className="item-details-category"><detailsItem.icon size={16} /> {detailsItem.category}</div>
+              <h2 id="item-details-title">{detailsItem.title}</h2>
+              <p className="item-details-description">{detailsItem.description}</p>
+              <div className="item-details-meta">
+                <div><MapPin size={17} /><span><small>Last seen / found at</small><strong>{detailsItem.location}</strong></span></div>
+                <div><Clock3 size={17} /><span><small>Report date</small><strong>{detailsItem.date}</strong></span></div>
+              </div>
+              <div className="item-details-poster">
+                <span className="item-details-avatar"><UserRound size={20} /></span>
+                <span className="item-details-poster-copy"><small>Posted by</small><strong>{detailsItem.posterName}</strong></span>
+                <span className={`item-details-status status-${detailsItem.status.replace(/_/g, "-")}`}>{detailsItem.status.replace(/_/g, " ")}</span>
+              </div>
+              <div className="item-details-actions">
+                {detailsItem.status === "open" && detailsItem.postedBy !== currentUser?.id && (
+                  <button className="button button-primary" type="button" onClick={() => {
+                    const itemToClaim = detailsItem;
+                    setDetailsItem(null);
+                    openClaimDialog("claim", itemToClaim);
+                  }}>{detailsItem.type === "Lost" ? "I found this item" : "Claim this item"} <ArrowRight size={17} /></button>
+                )}
+                <button className="button button-outline" type="button" onClick={() => setDetailsItem(null)}>Close details</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      )}
 
       {dialogMode && (
         <PortalDialog
